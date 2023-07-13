@@ -3,19 +3,19 @@ import { createTipTapBlock } from "../../../../api/block";
 import { handleEnter } from "../ListItemKeyboardShortcuts";
 import styles from "../../../Block.module.css";
 
-export const BulletListItemBlockContent = createTipTapBlock<"bulletListItem">({
-  name: "bulletListItem",
+export const QuoteBlockContent = createTipTapBlock<"quote">({
+  name: "quote",
   content: "inline*",
 
   addInputRules() {
     return [
       // Creates an unordered list when starting with "-", "+", or "*".
       new InputRule({
-        find: new RegExp(`^[-]\\s$`),
+        find: new RegExp(`^[>]\\s$`),
         handler: ({ state, chain, range }) => {
           chain()
             .BNUpdateBlock(state.selection.from, {
-              type: "bulletListItem",
+              type: "quote",
               props: {},
             })
             // Removes the "-", "+", or "*" character used to set the list.
@@ -69,14 +69,14 @@ export const BulletListItemBlockContent = createTipTapBlock<"bulletListItem">({
             return false;
           }
 
-          if (parent.getAttribute("data-content-type") === "bulletListItem") {
+          if (parent.getAttribute("data-content-type") === "quote") {
             return {};
           }
 
           return false;
         },
         priority: 300,
-        node: "bulletListItem",
+        node: "quote",
       },
     ];
   },

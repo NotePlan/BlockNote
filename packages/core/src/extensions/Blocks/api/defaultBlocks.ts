@@ -1,6 +1,8 @@
 import { HeadingBlockContent } from "../nodes/BlockContent/HeadingBlockContent/HeadingBlockContent";
 import { BulletListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/BulletListItemBlockContent/BulletListItemBlockContent";
 import { NumberedListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/NumberedListItemBlockContent/NumberedListItemBlockContent";
+import { QuoteBlockContent } from "../nodes/BlockContent/ListItemBlockContent/QuoteListItemBlockContent/QuoteBlockContent";
+import { TaskListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/TaskListItemBlockContent/TaskListItemBlockContent";
 import { ParagraphBlockContent } from "../nodes/BlockContent/ParagraphBlockContent/ParagraphBlockContent";
 import { PropSchema, TypesMatch } from "./blockTypes";
 
@@ -34,6 +36,14 @@ export const defaultBlockSchema = {
   bulletListItem: {
     propSchema: defaultProps,
     node: BulletListItemBlockContent,
+  },
+  taskListItem: {
+    propSchema: defaultProps,
+    node: TaskListItemBlockContent,
+  },
+  quote: {
+    propSchema: defaultProps,
+    node: QuoteBlockContent,
   },
   numberedListItem: {
     propSchema: defaultProps,

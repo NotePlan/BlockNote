@@ -1,5 +1,3 @@
-@import url("./assets/fonts-inter.css");
-
 .bnEditor {
   outline: none;
   padding-inline: 54px;
@@ -47,22 +45,21 @@ Tippy popups that are appended to document.body directly
 
 .defaultStyles {
   font-size: 16px;
-  font-weight: normal;
-  font-family: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont,
-    "Open Sans", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
-    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-weight: 500;
+  font-family: "-apple-system", "system-ui", "BlinkMacSystemFont",
+    "Helvetica Neue";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 [data-theme="light"] {
-  background-color: #FFFFFF;
-  color: #3F3F3F;
+  background-color: #ffffff;
+  color: #3f3f3f;
 }
 
 [data-theme="dark"] {
-  background-color: #1F1F1F;
-  color: #CFCFCF;
+  background-color: #1f1f1f;
+  color: #cfcfcf;
 }
 
 .dragPreview {

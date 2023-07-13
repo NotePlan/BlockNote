@@ -5,10 +5,17 @@ import styles from "./App.module.css";
 
 type WindowWithProseMirror = Window & typeof globalThis & { ProseMirror: any };
 
+// Gets the previously stored editor contents.
+const initialContent: string | null = localStorage.getItem("editorContent");
+
 function App() {
   const editor = useBlockNote({
+    initialContent: initialContent ? JSON.parse(initialContent) : undefined,
     onEditorContentChange: (editor) => {
-      console.log(editor.topLevelBlocks);
+      localStorage.setItem(
+        "editorContent",
+        JSON.stringify(editor.topLevelBlocks)
+      );
     },
     editorDOMAttributes: {
       class: styles.editor,

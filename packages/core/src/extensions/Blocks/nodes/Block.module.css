@@ -1,10 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind colors;
+
+:root {
+  --blue-noteplan: #0091f8;
+  --orange-noteplan: #d87001;
+  --orange-noteplan-hsl: 31, 99%, 43%;
+}
+
 /*
 BASIC STYLES
 */
 
 .blockOuter {
-  line-height: 1.5;
+  line-height: 1.4;
   transition: margin 0.2s;
+  padding-top: 0.55em;
 }
 
 /*Ensures blocks & block content spans editor width*/
@@ -20,7 +32,6 @@ BASIC STYLES
 }
 
 .blockContent {
-  padding: 3px 0;
   flex-grow: 1;
   transition: font-size 0.2s;
   /*
@@ -40,7 +51,7 @@ NESTED BLOCKS
 */
 
 .blockGroup .blockGroup {
-  margin-left: 1.5em;
+  margin-left: 2em;
 }
 
 .blockGroup .blockGroup > .blockOuter {
@@ -51,8 +62,9 @@ NESTED BLOCKS
   content: " ";
   display: inline;
   position: absolute;
-  left: -20px;
-  height: 100%;
+  left: -1.45rem;
+  top: 5px;
+  bottom: 0px;
   transition: all 0.2s 0.1s;
 }
 
@@ -60,14 +72,16 @@ NESTED BLOCKS
   .blockGroup
   .blockGroup
   > .blockOuter:not([data-prev-depth-changed])::before {
-  border-left: 1px solid #AFAFAF;
+  width: 1px;
+  background: #e5e5e5;
 }
 
 [data-theme="dark"]
   .blockGroup
   .blockGroup
   > .blockOuter:not([data-prev-depth-changed])::before {
-  border-left: 1px solid #7F7F7F;
+  width: 1px;
+  background: #7f7f7f;
 }
 
 .blockGroup .blockGroup > .blockOuter[data-prev-depth-change="-2"]::before {
@@ -159,6 +173,7 @@ NESTED BLOCKS
 /* Ordered */
 [data-content-type="numberedListItem"] {
   --index: attr(data-index);
+  padding-left: 1.2em;
 }
 
 [data-prev-type="numberedListItem"] {
@@ -168,38 +183,79 @@ NESTED BLOCKS
 .blockOuter[data-prev-type="numberedListItem"]:not([data-prev-index="none"])
   > .block
   > .blockContent::before {
-  margin-right: 1.2em;
+  margin-right: 0.6em;
+  margin-left: -1.2em;
   content: var(--prev-index) ".";
 }
 
 .blockOuter:not([data-prev-type])
   > .block
   > .blockContent[data-content-type="numberedListItem"]::before {
-  margin-right: 1.2em;
+  margin-right: 0.6em;
+  margin-left: -1.2em;
   content: var(--index) ".";
 }
 
-/* Unordered */
-/* No list nesting */
-.blockOuter[data-prev-type="bulletListItem"] > .block > .blockContent::before {
-  margin-right: 1.2em;
-  content: "•";
+/* Quotes */
+[data-content-type="quote"] {
+  font-style: italic;
+  position: relative;
+  padding-left: 1.63em;
+  color: #666666;
 }
 
 .blockOuter:not([data-prev-type])
   > .block
-  > .blockContent[data-content-type="bulletListItem"]::before {
+  > .blockContent[data-content-type="quote"]::before {
+  content: " ";
   margin-right: 1.2em;
-  content: "•";
+
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0.45rem;
+  width: 5px;
+  background: #95c8fc;
+  border-radius: 10px;
+}
+
+/* Unordered */
+/* No list nesting */
+[data-content-type="bulletListItem"] {
+  position: relative;
+  padding-left: 1.62em;
+}
+/* 
+.blockOuter[data-prev-type="bulletListItem"] > .block > .blockContent::before {
+  position: absolute;
+  top: 1.05rem;
+  left: 0.45rem;
+  content: "\e122";
+  font: var(--fa-font-solid);
+  color: var(--orange-noteplan);
+  font-size: 8px;
+} */
+
+.blockOuter:not([data-prev-type])
+  > .block
+  > .blockContent[data-content-type="bulletListItem"]::before {
+  position: absolute;
+  top: 0.45rem;
+  left: 0.45rem;
+  content: "\e122";
+  font: var(--fa-font-solid);
+  color: var(--orange-noteplan);
+  font-size: 8px;
 }
 
 /* 1 level of list nesting */
-[data-content-type="bulletListItem"]
+/* [data-content-type="bulletListItem"]
   ~ .blockGroup
   > .blockOuter[data-prev-type="bulletListItem"]
   > .block
   > .blockContent::before {
-  margin-right: 1.2em;
+  margin-right: 0.77em;
+  margin-left: -1.22em;
   content: "◦";
 }
 
@@ -208,11 +264,11 @@ NESTED BLOCKS
   > .blockOuter:not([data-prev-type])
   > .block
   > .blockContent[data-content-type="bulletListItem"]::before {
-  margin-right: 1.2em;
+  margin-right: 0.77em;
+  margin-left: -1.22em;
   content: "◦";
 }
 
-/* 2 levels of list nesting */
 [data-content-type="bulletListItem"]
   ~ .blockGroup
   [data-content-type="bulletListItem"]
@@ -220,7 +276,8 @@ NESTED BLOCKS
   > .blockOuter[data-prev-type="bulletListItem"]
   > .block
   > .blockContent::before {
-  margin-right: 1.2em;
+  margin-right: 0.77em;
+  margin-left: -1.22em;
   content: "▪";
 }
 
@@ -231,9 +288,61 @@ NESTED BLOCKS
   > .blockOuter:not([data-prev-type])
   > .block
   > .blockContent[data-content-type="bulletListItem"]::before {
-  margin-right: 1.2em;
+  margin-right: 0.6em;
+  margin-left: -1.2em;
   content: "▪";
 }
+*/
+
+/* Tasks */
+[data-content-type="taskListItem"] {
+  padding-left: 1.62em;
+  position: relative;
+
+  &[data-checked="false"] > label:before {
+    content: "\f111";
+    font: var(--fa-font-regular);
+    color: var(--orange-noteplan);
+  }
+
+  &[data-checked="true"] > label:before {
+    content: "\f058";
+    font: var(--fa-font-regular);
+  }
+
+  &[data-checked="true"] {
+    opacity: 0.4;
+  }
+
+  > label {
+    user-select: none;
+    font: var(--fa-font-regular);
+    display: inline-block;
+    position: absolute;
+    top: 0.2rem;
+    left: 0.12rem;
+  }
+
+  > label > input[type="checkbox"] {
+    cursor: pointer;
+    display: none;
+  }
+}
+
+/* .blockOuter[data-prev-type="taskListItem"] > .block > .blockContent::before {
+  margin-right: 0.6em;
+  margin-left: -1.2em;
+  
+} */
+
+/* .blockOuter:not([data-prev-type])
+  > .block
+  > .blockContent[data-content-type="taskListItem"]::before {
+  margin-right: 0.6em;
+  margin-left: -1.2em;
+  content: "\f058";
+  font: var(--fa-font-regular);
+} */
 
 /* PLACEHOLDERS*/
 
@@ -250,12 +359,12 @@ NESTED BLOCKS
 
 [data-theme="light"] .isEmpty .inlineContent:before,
 .isFilter .inlineContent:before {
-  color: #CFCFCF;
+  color: #cfcfcf;
 }
 
 [data-theme="dark"] .isEmpty .inlineContent:before,
 .isFilter .inlineContent:before {
-  color: #7F7F7F;
+  color: #7f7f7f;
 }
 
 /* TODO: would be nicer if defined from code */
@@ -274,7 +383,7 @@ NESTED BLOCKS
 
 .blockContent[data-content-type="bulletListItem"].isEmpty .inlineContent:before,
 .blockContent[data-content-type="numberedListItem"].isEmpty
-.inlineContent:before {
+  .inlineContent:before {
   content: "List";
 }
 
