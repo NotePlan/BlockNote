@@ -45,3 +45,28 @@ export const handleEnter = (editor: Editor) => {
       }),
   ]);
 };
+
+export const handleCheckingTask = (editor: Editor) => {
+  const node = editor.state.selection.$from.node(-1);
+
+  console.log(node.attrs);
+  if (node) {
+    // transaction to toggle checked attribute
+    return editor
+      .chain()
+      .command(({ tr }) => {
+        tr.setNodeMarkup(
+          editor.state.selection.$from.before(-1) + 1,
+          undefined,
+          {
+            checked: !node.attrs.checked,
+            cancelled: false,
+            checklist: node.attrs.checklist,
+          }
+        );
+        return true;
+      })
+      .run();
+  }
+  return false;
+};

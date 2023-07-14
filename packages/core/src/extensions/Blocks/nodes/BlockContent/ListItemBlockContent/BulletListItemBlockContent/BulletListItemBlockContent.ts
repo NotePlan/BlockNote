@@ -7,9 +7,10 @@ export const BulletListItemBlockContent = createTipTapBlock<"bulletListItem">({
   name: "bulletListItem",
   content: "inline*",
 
+  // This is needed to detect when the user types "-", so it gets converted into a bullet item.
   addInputRules() {
     return [
-      // Creates an unordered list when starting with "-", "+", or "*".
+      // Creates an unordered list when starting with "-",.
       new InputRule({
         find: new RegExp(`^[-]\\s$`),
         handler: ({ state, chain, range }) => {
@@ -18,7 +19,7 @@ export const BulletListItemBlockContent = createTipTapBlock<"bulletListItem">({
               type: "bulletListItem",
               props: {},
             })
-            // Removes the "-", "+", or "*" character used to set the list.
+            // Removes the "-" character used to set the list.
             .deleteRange({ from: range.from, to: range.to });
         },
       }),

@@ -17,6 +17,15 @@ export const defaultProps = {
     default: "left" as const,
     values: ["left", "center", "right", "justify"] as const,
   },
+  checked: {
+    default: "false" as const,
+  },
+  cancelled: {
+    default: "false",
+  },
+  checklist: {
+    default: "false",
+  },
 } satisfies PropSchema;
 
 export type DefaultProps = typeof defaultProps;

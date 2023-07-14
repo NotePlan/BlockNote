@@ -1,6 +1,6 @@
-import { InputRule, mergeAttributes } from "@tiptap/core";
+import { Editor, InputRule, mergeAttributes } from "@tiptap/core";
 import { createTipTapBlock } from "../../../../api/block";
-import { handleEnter } from "../ListItemKeyboardShortcuts";
+import { handleEnter, handleCheckingTask } from "../ListItemKeyboardShortcuts";
 import styles from "../../../Block.module.css";
 
 import { NodeView } from "prosemirror-view";
@@ -8,8 +8,8 @@ import { Node } from "prosemirror-model";
 
 function addTaskListItemBlockContentView(
   node: Node,
-  editor: EditorView,
-  getPos: () => number
+  editor: Editor,
+  getPos: (() => number) | boolean
 ): NodeView {
   const dom = document.createElement("div");
   const checked = node.attrs.checked || false;
@@ -34,7 +34,7 @@ function addTaskListItemBlockContentView(
   });
 
   input.addEventListener("change", (event) => {
-    const { checked } = event.target;
+    const checked = (event.target as HTMLInputElement).checked;
     if (editor.isEditable && typeof getPos === "function") {
       editor
         .chain()
@@ -53,11 +53,9 @@ function addTaskListItemBlockContentView(
         })
         .run();
     }
-    if (!editor.isEditable && this.options.onReadOnlyChecked) {
+    if (!editor.isEditable) {
       // Reset state if onReadOnlyChecked returns false
-      if (!this.options.onReadOnlyChecked(node, checked)) {
-        checkbox.checked = !checkbox.checked;
-      }
+      input.checked = !input.checked;
     }
   });
 
@@ -91,6 +89,7 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
   name: "taskListItem",
   content: "inline*",
 
+  // This is needed to detect when the user types "*", so it gets converted into a task item.
   addInputRules() {
     return [
       // Creates an unordered list when starting with "*".
@@ -102,7 +101,7 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
               type: "taskListItem",
               props: {},
             })
-            // Removes the "-", "+", or "*" character used to set the list.
+            // Removes the "*" character used to set the list.
             .deleteRange({ from: range.from, to: range.to });
         },
       }),
@@ -112,6 +111,7 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
   addKeyboardShortcuts() {
     return {
       Enter: () => handleEnter(this.editor),
+      "Cmd-d": () => handleCheckingTask(this.editor),
     };
   },
 
@@ -196,9 +196,7 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
     ];
   },
 
-  renderHTML({ HTMLAttributes, node }) {
-    const checked = node.attrs.checked || false;
-
+  renderHTML({ HTMLAttributes }) {
     return [
       "div",
       mergeAttributes(HTMLAttributes, {
@@ -220,7 +218,7 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
   },
 
   addNodeView() {
-    return ({ node, HTMLAttributes, getPos, editor }) => {
+    return ({ node, getPos, editor }) => {
       return addTaskListItemBlockContentView(node, editor, getPos);
     };
   },
