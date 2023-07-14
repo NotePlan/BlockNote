@@ -299,6 +299,11 @@ NESTED BLOCKS
   padding-left: 1.62em;
   position: relative;
 
+  &[data-checked="true"],
+  &[data-cancelled="true"] {
+    opacity: 0.4;
+  }
+
   &[data-checked="false"] > label:before {
     content: "\f111";
     font: var(--fa-font-regular);
@@ -310,8 +315,10 @@ NESTED BLOCKS
     font: var(--fa-font-regular);
   }
 
-  &[data-checked="true"] {
-    opacity: 0.4;
+  &[data-cancelled="true"] > label:before {
+    content: "\f057";
+    font: var(--fa-font-regular);
+    color: inherit;
   }
 
   > label {

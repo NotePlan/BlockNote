@@ -3,7 +3,8 @@ import "@blocknote/core/style.css";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
 import styles from "./App.module.css";
 
-type WindowWithProseMirror = Window & typeof globalThis & { ProseMirror: any };
+type WindowWithProseMirror = Window &
+  typeof globalThis & { ProseMirror: any; editor?: any };
 
 // Gets the previously stored editor contents.
 const initialContent: string | null = localStorage.getItem("editorContent");
@@ -26,6 +27,7 @@ function App() {
 
   // Give tests a way to get prosemirror instance
   (window as WindowWithProseMirror).ProseMirror = editor?._tiptapEditor;
+  (window as WindowWithProseMirror).editor = editor;
 
   return <BlockNoteView editor={editor} />;
 }

@@ -46,8 +46,8 @@ export const handleEnter = (editor: Editor) => {
   ]);
 };
 
-export const handleCheckingTask = (editor: Editor) => {
-  const node = editor.state.selection.$from.node(-1);
+export const handleComplete = (editor: Editor) => {
+  const node = editor.state.selection.$from.node();
 
   console.log(node.attrs);
   if (node) {
@@ -55,15 +55,32 @@ export const handleCheckingTask = (editor: Editor) => {
     return editor
       .chain()
       .command(({ tr }) => {
-        tr.setNodeMarkup(
-          editor.state.selection.$from.before(-1) + 1,
-          undefined,
-          {
-            checked: !node.attrs.checked,
-            cancelled: false,
-            checklist: node.attrs.checklist,
-          }
-        );
+        tr.setNodeMarkup(editor.state.selection.$from.before(), undefined, {
+          checked: !node.attrs.checked,
+          cancelled: false,
+          checklist: node.attrs.checklist,
+        });
+        return true;
+      })
+      .run();
+  }
+  return false;
+};
+
+export const handleCancel = (editor: Editor) => {
+  const node = editor.state.selection.$from.node();
+
+  console.log(node.attrs);
+  if (node) {
+    // transaction to toggle checked attribute
+    return editor
+      .chain()
+      .command(({ tr }) => {
+        tr.setNodeMarkup(editor.state.selection.$from.before(), undefined, {
+          checked: false,
+          cancelled: !node.attrs.cancelled,
+          checklist: node.attrs.checklist,
+        });
         return true;
       })
       .run();

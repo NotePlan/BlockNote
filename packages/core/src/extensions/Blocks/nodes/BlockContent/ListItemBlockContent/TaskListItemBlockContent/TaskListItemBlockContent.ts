@@ -1,6 +1,10 @@
 import { Editor, InputRule, mergeAttributes } from "@tiptap/core";
 import { createTipTapBlock } from "../../../../api/block";
-import { handleEnter, handleCheckingTask } from "../ListItemKeyboardShortcuts";
+import {
+  handleEnter,
+  handleComplete,
+  handleCancel,
+} from "../ListItemKeyboardShortcuts";
 import styles from "../../../Block.module.css";
 
 import { NodeView } from "prosemirror-view";
@@ -18,6 +22,7 @@ function addTaskListItemBlockContentView(
   dom.className = "blockContent";
   dom.dataset.contentType = "taskListItem";
   dom.dataset.checked = checked;
+  dom.dataset.cancelled = node.attrs.cancelled || false;
 
   const label = document.createElement("label");
   const input = document.createElement("input");
@@ -73,6 +78,7 @@ function addTaskListItemBlockContentView(
       }
 
       dom.dataset.checked = updatedNode.attrs.checked || false;
+      dom.dataset.cancelled = updatedNode.attrs.cancelled || false;
 
       if (updatedNode.attrs.checked) {
         input.setAttribute("checked", "checked");
@@ -111,7 +117,8 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
   addKeyboardShortcuts() {
     return {
       Enter: () => handleEnter(this.editor),
-      "Cmd-d": () => handleCheckingTask(this.editor),
+      "Cmd-d": () => handleComplete(this.editor),
+      "Cmd-s": () => handleCancel(this.editor),
     };
   },
 
@@ -119,7 +126,7 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
     return {
       checked: {
         default: false,
-        keepOnSplit: false,
+        keepOnSplit: false, // When you hit enter and create a new task in the middle or empty, don't keep the checked attribute
         parseHTML: (element) => element.getAttribute("data-checked") === "true",
         renderHTML: (attributes) => ({
           "data-checked": attributes.checked,
