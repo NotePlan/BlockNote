@@ -321,6 +321,18 @@ NESTED BLOCKS
     color: inherit;
   }
 
+  &[data-checked="false"][data-checklist="true"] > label:before {
+    content: "\f0c8";
+  }
+
+  &[data-checked="true"][data-checklist="true"] > label:before {
+    content: "\f14a";
+  }
+
+  &[data-cancelled="true"][data-checklist="true"] > label:before {
+    content: "\f2d3";
+  }
+
   > label {
     user-select: none;
     font: var(--fa-font-regular);
@@ -333,6 +345,11 @@ NESTED BLOCKS
   > label > input[type="checkbox"] {
     cursor: pointer;
     display: none;
+  }
+
+  &[data-checklist="true"] {
+    left: 0.06rem;
+    padding-left: 1.56em;
   }
 }
 

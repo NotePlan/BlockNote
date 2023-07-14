@@ -1,4 +1,9 @@
-import { Editor, InputRule, mergeAttributes } from "@tiptap/core";
+import {
+  Editor,
+  InputRule,
+  wrappingInputRule,
+  mergeAttributes,
+} from "@tiptap/core";
 import { createTipTapBlock } from "../../../../api/block";
 import {
   handleEnter,
@@ -23,6 +28,7 @@ function addTaskListItemBlockContentView(
   dom.dataset.contentType = "taskListItem";
   dom.dataset.checked = checked;
   dom.dataset.cancelled = node.attrs.cancelled || false;
+  dom.dataset.checklist = node.attrs.checklist || false;
 
   const label = document.createElement("label");
   const input = document.createElement("input");
@@ -79,6 +85,7 @@ function addTaskListItemBlockContentView(
 
       dom.dataset.checked = updatedNode.attrs.checked || false;
       dom.dataset.cancelled = updatedNode.attrs.cancelled || false;
+      dom.dataset.checklist = updatedNode.attrs.checklist || false;
 
       if (updatedNode.attrs.checked) {
         input.setAttribute("checked", "checked");
@@ -100,12 +107,17 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
     return [
       // Creates an unordered list when starting with "*".
       new InputRule({
-        find: new RegExp(`^[*]\\s$`),
-        handler: ({ state, chain, range }) => {
+        find: new RegExp(`^([*+])\\s$`),
+        handler: ({ state, chain, range, match }) => {
+          const isCheckList = match && match.length > 0 ? match[1] : false;
           chain()
             .BNUpdateBlock(state.selection.from, {
-              type: "taskListItem",
-              props: {},
+              type: this.name,
+              props: {
+                checked: "false",
+                canceled: "false",
+                checklist: isCheckList === "+" ? "true" : "false",
+              },
             })
             // Removes the "*" character used to set the list.
             .deleteRange({ from: range.from, to: range.to });
