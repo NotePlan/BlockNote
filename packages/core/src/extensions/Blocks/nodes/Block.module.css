@@ -225,8 +225,18 @@ NESTED BLOCKS
   position: relative;
   padding-left: 1.62em;
 }
-/* 
-.blockOuter[data-prev-type="bulletListItem"] > .block > .blockContent::before {
+
+[data-content-type="bulletListItem"]::before {
+  position: absolute;
+  top: 0.45rem;
+  left: 0.45rem;
+  content: "\e122";
+  font: var(--fa-font-solid);
+  color: var(--orange-noteplan);
+  font-size: 8px;
+}
+
+/* .blockOuter[data-prev-type="bulletListItem"] > .block > .blockContent::before {
   position: absolute;
   top: 1.05rem;
   left: 0.45rem;
@@ -254,9 +264,13 @@ NESTED BLOCKS
   > .blockOuter[data-prev-type="bulletListItem"]
   > .block
   > .blockContent::before {
-  margin-right: 0.77em;
-  margin-left: -1.22em;
-  content: "◦";
+  position: absolute;
+  top: 0.45rem;
+  left: 0.45rem;
+  content: "\e122";
+  font: var(--fa-font-solid);
+  color: var(--orange-noteplan);
+  font-size: 8px;
 }
 
 [data-content-type="bulletListItem"]
@@ -264,9 +278,13 @@ NESTED BLOCKS
   > .blockOuter:not([data-prev-type])
   > .block
   > .blockContent[data-content-type="bulletListItem"]::before {
-  margin-right: 0.77em;
-  margin-left: -1.22em;
-  content: "◦";
+  position: absolute;
+  top: 0.45rem;
+  left: 0.45rem;
+  content: "\e122";
+  font: var(--fa-font-solid);
+  color: var(--orange-noteplan);
+  font-size: 8px;
 }
 
 [data-content-type="bulletListItem"]
@@ -276,9 +294,13 @@ NESTED BLOCKS
   > .blockOuter[data-prev-type="bulletListItem"]
   > .block
   > .blockContent::before {
-  margin-right: 0.77em;
-  margin-left: -1.22em;
-  content: "▪";
+  position: absolute;
+  top: 0.45rem;
+  left: 0.45rem;
+  content: "\e122";
+  font: var(--fa-font-solid);
+  color: var(--orange-noteplan);
+  font-size: 8px;
 }
 
 [data-content-type="bulletListItem"]
@@ -288,11 +310,14 @@ NESTED BLOCKS
   > .blockOuter:not([data-prev-type])
   > .block
   > .blockContent[data-content-type="bulletListItem"]::before {
-  margin-right: 0.6em;
-  margin-left: -1.2em;
-  content: "▪";
-}
-*/
+  position: absolute;
+  top: 0.45rem;
+  left: 0.45rem;
+  content: "\e122";
+  font: var(--fa-font-solid);
+  color: var(--orange-noteplan);
+  font-size: 8px;
+} */
 
 /* Tasks */
 [data-content-type="taskListItem"],

@@ -68,10 +68,7 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return TaskListItemListHTMLRender(
-      this.name,
-      HTMLAttributes
-    ) as DOMOutputSpec;
+    return TaskListItemListHTMLRender(this.name, HTMLAttributes);
   },
 
   addNodeView() {
