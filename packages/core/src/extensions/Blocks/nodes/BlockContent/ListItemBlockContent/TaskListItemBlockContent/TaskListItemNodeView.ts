@@ -10,7 +10,6 @@ export function TaskListItemNodeView(
   getPos: (() => number) | boolean,
   type: string
 ): NodeView {
-  console.log("new task list");
   const dom = document.createElement("div");
   const checked = node.attrs.checked || false;
   let altKey = false;
@@ -23,7 +22,7 @@ export function TaskListItemNodeView(
   const label = document.createElement("label");
   const input = document.createElement("input");
   const span = document.createElement("span");
-  const content = document.createElement("div");
+  const content = document.createElement("p");
 
   input.type = "checkbox";
   input.checked = checked;

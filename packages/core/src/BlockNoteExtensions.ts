@@ -110,6 +110,7 @@ export const getBlockNoteExtensions = <BSchema extends BlockSchema>(opts: {
     ...Object.values(opts.blockSchema).map((blockSpec) =>
       blockSpec.node.configure({ editor: opts.editor })
     ),
+
     CustomBlockSerializerExtension,
 
     Dropcursor.configure({ width: 5, color: "#ddeeff" }),

@@ -31,6 +31,7 @@ export const QuotListItemBlockContent = createTipTapBlock<"quoteListItem">({
     };
   },
 
+  // Parsed into tip tap nodes
   parseHTML() {
     return [
       // Case for regular HTML list structure.
@@ -57,7 +58,7 @@ export const QuotListItemBlockContent = createTipTapBlock<"quoteListItem">({
       },
       // Case for BlockNote list structure.
       {
-        tag: "p",
+        tag: "p", // This has to overlap with what is defined in the BlockContent node (the node type, here p)
         getAttrs: (element) => {
           if (typeof element === "string") {
             return false;
@@ -88,7 +89,7 @@ export const QuotListItemBlockContent = createTipTapBlock<"quoteListItem">({
         class: styles.blockContent,
         "data-content-type": this.name,
       }),
-      ["p", { class: styles.inlineContent }, 0],
+      ["p", { class: styles.inlineContent }, 0], // This p has to overlap with the tags in parseHTML
     ];
   },
 });

@@ -7,6 +7,7 @@ import {
 } from "../ListItemKeyboardShortcuts";
 import styles from "../../../Block.module.css";
 import { TaskListItemNodeView } from "./TaskListItemNodeView";
+import { TaskListItemHTMLParser } from "./TaskListItemHTMLParser";
 
 export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
   name: "taskListItem",
@@ -43,7 +44,6 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
   },
 
   addAttributes() {
-    console.log("adding attributes");
     return {
       checked: {
         default: false,
@@ -66,53 +66,7 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
   },
 
   parseHTML() {
-    return [
-      // Case for regular HTML list structure.
-      {
-        tag: "li",
-        getAttrs: (element) => {
-          if (typeof element === "string") {
-            return false;
-          }
-
-          const parent = element.parentElement;
-
-          if (parent === null) {
-            return false;
-          }
-
-          if (parent.tagName === "UL") {
-            return {};
-          }
-
-          return false;
-        },
-        node: this.name,
-      },
-      // Case for BlockNote list structure.
-      {
-        tag: "p",
-        getAttrs: (element) => {
-          if (typeof element === "string") {
-            return false;
-          }
-
-          const parent = element.parentElement;
-
-          if (parent === null) {
-            return false;
-          }
-
-          if (parent.getAttribute("data-content-type") === this.name) {
-            return {};
-          }
-
-          return false;
-        },
-        priority: 300,
-        node: this.name,
-      },
-    ];
+    return TaskListItemHTMLParser(this.name);
   },
 
   renderHTML({ HTMLAttributes }) {
@@ -132,7 +86,7 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
         ],
         ["span"],
       ],
-      ["div", { class: styles.inlineContent }, 0],
+      ["p", { class: styles.inlineContent }, 0], // This has to be a 'p' here and in parseHTML where we define the tags
     ];
   },
 
