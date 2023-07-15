@@ -1,9 +1,4 @@
-import {
-  Editor,
-  InputRule,
-  wrappingInputRule,
-  mergeAttributes,
-} from "@tiptap/core";
+import { Editor, InputRule, mergeAttributes } from "@tiptap/core";
 import { createTipTapBlock } from "../../../../api/block";
 import {
   handleEnter,
@@ -20,6 +15,7 @@ function addTaskListItemBlockContentView(
   editor: Editor,
   getPos: (() => number) | boolean
 ): NodeView {
+  console.log("creat a list");
   const dom = document.createElement("div");
   const checked = node.attrs.checked || false;
   let altKey = false;
@@ -187,7 +183,7 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
 
           return false;
         },
-        node: "taskListItem",
+        node: this.name,
       },
       // Case for BlockNote list structure.
       {
@@ -203,14 +199,14 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
             return false;
           }
 
-          if (parent.getAttribute("data-content-type") === "taskListItem") {
+          if (parent.getAttribute("data-content-type") === this.name) {
             return {};
           }
 
           return false;
         },
         priority: 300,
-        node: "taskListItem",
+        node: this.name,
       },
     ];
   },

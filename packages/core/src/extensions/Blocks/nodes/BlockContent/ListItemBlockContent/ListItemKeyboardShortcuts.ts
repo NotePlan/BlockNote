@@ -69,8 +69,6 @@ export const handleComplete = (editor: Editor) => {
 
 export const handleCancel = (editor: Editor) => {
   const node = editor.state.selection.$from.node();
-
-  console.log(node.attrs);
   if (node) {
     // transaction to toggle checked attribute
     return editor

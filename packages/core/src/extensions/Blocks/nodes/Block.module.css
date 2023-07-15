@@ -197,7 +197,7 @@ NESTED BLOCKS
 }
 
 /* Quotes */
-[data-content-type="quote"] {
+[data-content-type="quoteListItem"] {
   font-style: italic;
   position: relative;
   padding-left: 1.63em;
@@ -206,7 +206,7 @@ NESTED BLOCKS
 
 .blockOuter:not([data-prev-type])
   > .block
-  > .blockContent[data-content-type="quote"]::before {
+  > .blockContent[data-content-type="quoteListItem"]::before {
   content: " ";
   margin-right: 1.2em;
 

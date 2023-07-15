@@ -1,7 +1,7 @@
 import { HeadingBlockContent } from "../nodes/BlockContent/HeadingBlockContent/HeadingBlockContent";
 import { BulletListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/BulletListItemBlockContent/BulletListItemBlockContent";
 import { NumberedListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/NumberedListItemBlockContent/NumberedListItemBlockContent";
-import { QuoteBlockContent } from "../nodes/BlockContent/ListItemBlockContent/QuoteListItemBlockContent/QuoteBlockContent";
+import { QuotListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/QuoteListItemBlockContent/QuoteBlockContent";
 import { TaskListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/TaskListItemBlockContent/TaskListItemBlockContent";
 import { ParagraphBlockContent } from "../nodes/BlockContent/ParagraphBlockContent/ParagraphBlockContent";
 import { PropSchema, TypesMatch } from "./blockTypes";
@@ -50,9 +50,9 @@ export const defaultBlockSchema = {
     propSchema: defaultProps,
     node: TaskListItemBlockContent,
   },
-  quote: {
+  quoteListItem: {
     propSchema: defaultProps,
-    node: QuoteBlockContent,
+    node: QuotListItemBlockContent,
   },
   numberedListItem: {
     propSchema: defaultProps,

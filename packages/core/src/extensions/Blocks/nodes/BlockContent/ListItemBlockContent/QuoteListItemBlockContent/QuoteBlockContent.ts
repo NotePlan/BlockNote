@@ -3,22 +3,22 @@ import { createTipTapBlock } from "../../../../api/block";
 import { handleEnter } from "../ListItemKeyboardShortcuts";
 import styles from "../../../Block.module.css";
 
-export const QuoteBlockContent = createTipTapBlock<"quote">({
-  name: "quote",
+export const QuotListItemBlockContent = createTipTapBlock<"quoteListItem">({
+  name: "quoteListItem",
   content: "inline*",
 
   addInputRules() {
     return [
-      // Creates an unordered list when starting with "-", "+", or "*".
+      // Creates an unordered list when starting with ">".
       new InputRule({
         find: new RegExp(`^[>]\\s$`),
         handler: ({ state, chain, range }) => {
           chain()
             .BNUpdateBlock(state.selection.from, {
-              type: "quote",
+              type: this.name,
               props: {},
             })
-            // Removes the "-", "+", or "*" character used to set the list.
+            // Removes the ">" character used to set the list.
             .deleteRange({ from: range.from, to: range.to });
         },
       }),
@@ -53,7 +53,7 @@ export const QuoteBlockContent = createTipTapBlock<"quote">({
 
           return false;
         },
-        node: "bulletListItem",
+        node: this.name,
       },
       // Case for BlockNote list structure.
       {
@@ -69,14 +69,14 @@ export const QuoteBlockContent = createTipTapBlock<"quote">({
             return false;
           }
 
-          if (parent.getAttribute("data-content-type") === "quote") {
+          if (parent.getAttribute("data-content-type") === this.name) {
             return {};
           }
 
           return false;
         },
         priority: 300,
-        node: "quote",
+        node: this.name,
       },
     ];
   },
