@@ -1,13 +1,13 @@
-import { InputRule, mergeAttributes } from "@tiptap/core";
+import { InputRule } from "@tiptap/core";
 import { createTipTapBlock } from "../../../../api/block";
 import {
   handleEnter,
   handleComplete,
   handleCancel,
 } from "../ListItemKeyboardShortcuts";
-import styles from "../../../Block.module.css";
 import { TaskListItemNodeView } from "./TaskListItemNodeView";
 import { TaskListItemHTMLParser } from "./TaskListItemHTMLParser";
+import { TaskListItemListHTMLRender } from "./TaskListItemHTMLRender";
 
 export const CheckListItemBlockContent = createTipTapBlock<"checkListItem">({
   name: "checkListItem",
@@ -47,17 +47,14 @@ export const CheckListItemBlockContent = createTipTapBlock<"checkListItem">({
     return {
       checked: {
         default: false,
-        keepOnSplit: false, // When you hit enter and create a new task in the middle or empty, don't keep the checked attribute
-        parseHTML: (element) => element.getAttribute("data-checked") === "true",
+        parseHTML: (element) => element.getAttribute("data-checked"),
         renderHTML: (attributes) => ({
           "data-checked": attributes.checked,
         }),
       },
       cancelled: {
         default: false,
-        keepOnSplit: false,
-        parseHTML: (element) =>
-          element.getAttribute("data-cancelled") === "true",
+        parseHTML: (element) => element.getAttribute("data-cancelled"),
         renderHTML: (attributes) => ({
           "data-cancelled": attributes.cancelled,
         }),
@@ -70,24 +67,7 @@ export const CheckListItemBlockContent = createTipTapBlock<"checkListItem">({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return [
-      "div",
-      mergeAttributes(HTMLAttributes, {
-        class: styles.blockContent,
-        "data-content-type": this.name,
-      }),
-      [
-        "label",
-        [
-          "input",
-          {
-            type: "checkbox",
-          },
-        ],
-        ["span"],
-      ],
-      ["p", { class: styles.inlineContent }, 0], // This has to be a 'p' here and in parseHTML where we define the tags
-    ];
+    return TaskListItemListHTMLRender(this.name, HTMLAttributes);
   },
 
   addNodeView() {

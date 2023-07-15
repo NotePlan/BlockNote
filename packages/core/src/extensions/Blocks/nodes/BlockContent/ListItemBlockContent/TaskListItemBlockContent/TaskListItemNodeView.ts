@@ -22,7 +22,7 @@ export function TaskListItemNodeView(
   const label = document.createElement("label");
   const input = document.createElement("input");
   const span = document.createElement("span");
-  const content = document.createElement("p");
+  const content = document.createElement("div");
 
   input.type = "checkbox";
   input.checked = checked;

@@ -419,7 +419,6 @@ export class BlockNoteEditor<BSchema extends BlockSchema = DefaultBlockSchema> {
    * Gets a snapshot of the current selection.
    */
   public getSelection(): Selection<BSchema> | undefined {
-    console.log("Get selection");
     if (
       this._tiptapEditor.state.selection.from ===
       this._tiptapEditor.state.selection.to

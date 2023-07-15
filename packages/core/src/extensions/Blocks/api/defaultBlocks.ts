@@ -24,9 +24,6 @@ export const defaultProps = {
   cancelled: {
     default: "false" as const,
   },
-  checklist: {
-    default: "false" as const,
-  },
 } satisfies PropSchema;
 
 export type DefaultProps = typeof defaultProps;

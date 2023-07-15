@@ -24,7 +24,7 @@ export function TaskListItemHTMLParser(name: string) {
     },
     // Case for BlockNote list structure.
     {
-      tag: "p",
+      tag: "div",
       getAttrs: (element: HTMLElement | string) => {
         if (typeof element === "string") {
           return false;
