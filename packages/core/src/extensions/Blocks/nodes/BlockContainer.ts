@@ -311,7 +311,7 @@ export const BlockContainer = Node.create<IBlock>({
             return false;
           }
 
-          const { contentNode, contentType, startPos, endPos, depth } =
+          const { /*contentNode,*/ contentType, startPos, endPos, depth } =
             blockInfo;
 
           const originalBlockContent = state.doc.cut(startPos + 1, posInBlock);
@@ -348,8 +348,8 @@ export const BlockContainer = Node.create<IBlock>({
               state.tr.setBlockType(
                 newBlockContentPos,
                 newBlockContentPos,
-                state.schema.node(contentType).type,
-                contentNode.attrs
+                state.schema.node(contentType).type
+                // contentNode.attrs // Don't keep the attributes or we run into the issue that we the new task is completed or canceled
               );
             }
 

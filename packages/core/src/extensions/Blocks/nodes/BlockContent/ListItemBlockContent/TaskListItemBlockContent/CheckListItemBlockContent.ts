@@ -8,8 +8,8 @@ import {
 import styles from "../../../Block.module.css";
 import { TaskListItemNodeView } from "./TaskListItemNodeView";
 
-export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
-  name: "taskListItem",
+export const CheckListItemBlockContent = createTipTapBlock<"checkListItem">({
+  name: "checkListItem",
   content: "inline*",
 
   // This is needed to detect when the user types "*", so it gets converted into a task item.
@@ -17,7 +17,7 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
     return [
       // Creates an unordered list when starting with "*".
       new InputRule({
-        find: new RegExp(`^\\*\\s$`),
+        find: new RegExp(`^\\+\\s$`),
         handler: ({ state, chain, range }) => {
           chain()
             .BNUpdateBlock(state.selection.from, {

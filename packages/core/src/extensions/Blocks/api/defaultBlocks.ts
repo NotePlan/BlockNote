@@ -3,6 +3,7 @@ import { BulletListItemBlockContent } from "../nodes/BlockContent/ListItemBlockC
 import { NumberedListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/NumberedListItemBlockContent/NumberedListItemBlockContent";
 import { QuotListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/QuoteListItemBlockContent/QuoteBlockContent";
 import { TaskListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/TaskListItemBlockContent/TaskListItemBlockContent";
+import { CheckListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/TaskListItemBlockContent/CheckListItemBlockContent";
 import { ParagraphBlockContent } from "../nodes/BlockContent/ParagraphBlockContent/ParagraphBlockContent";
 import { PropSchema, TypesMatch } from "./blockTypes";
 
@@ -21,10 +22,10 @@ export const defaultProps = {
     default: "false" as const,
   },
   cancelled: {
-    default: "false",
+    default: "false" as const,
   },
   checklist: {
-    default: "false",
+    default: "false" as const,
   },
 } satisfies PropSchema;
 
@@ -49,6 +50,10 @@ export const defaultBlockSchema = {
   taskListItem: {
     propSchema: defaultProps,
     node: TaskListItemBlockContent,
+  },
+  checkListItem: {
+    propSchema: defaultProps,
+    node: CheckListItemBlockContent,
   },
   quoteListItem: {
     propSchema: defaultProps,
