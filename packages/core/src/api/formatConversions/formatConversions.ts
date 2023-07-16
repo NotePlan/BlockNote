@@ -1,7 +1,8 @@
 import { DOMParser, DOMSerializer, Schema } from "prosemirror-model";
 import rehypeParse from "rehype-parse";
-import rehypeRemark from "rehype-remark";
+import rehypeRemark, { Options } from "rehype-remark";
 import rehypeStringify from "rehype-stringify";
+import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
@@ -50,7 +51,6 @@ export async function HTMLToBlocks<BSchema extends BlockSchema>(
   const parentNode = parser.parse(htmlNode);
 
   const blocks: Block<BSchema>[] = [];
-
   for (let i = 0; i < parentNode.firstChild!.childCount; i++) {
     blocks.push(nodeToBlock(parentNode.firstChild!.child(i), blockSchema));
   }
@@ -62,15 +62,29 @@ export async function blocksToMarkdown<BSchema extends BlockSchema>(
   blocks: Block<BSchema>[],
   schema: Schema
 ): Promise<string> {
+  const options = {
+    handlers: {
+      break: function () {
+        return "\n";
+      },
+    },
+  };
+  const temp = await blocksToHTML(blocks, schema);
   const markdownString = await unified()
     .use(rehypeParse, { fragment: true })
     .use(removeUnderlines)
     .use(rehypeRemark)
     .use(remarkGfm)
-    .use(remarkStringify)
-    .process(await blocksToHTML(blocks, schema));
+    .use(remarkStringify, options)
+    .process(temp);
 
   return markdownString.value as string;
+}
+/** @type {import('unified').Plugin<[], import('mdast').Root>} */
+function debugRemark() {
+  return function transformer(tree: any, file: any) {
+    console.log(tree);
+  };
 }
 
 export async function markdownToBlocks<BSchema extends BlockSchema>(
@@ -80,10 +94,13 @@ export async function markdownToBlocks<BSchema extends BlockSchema>(
 ): Promise<Block<BSchema>[]> {
   const htmlString = await unified()
     .use(remarkParse)
+    .use(remarkBreaks)
     .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeStringify)
     .process(markdown);
+
+  console.log(htmlString.value);
 
   return HTMLToBlocks(htmlString.value as string, blockSchema, schema);
 }
