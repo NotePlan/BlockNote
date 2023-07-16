@@ -30,7 +30,11 @@ export async function blocksToHTML<BSchema extends BlockSchema>(
     .use(rehypeParse, { fragment: true })
     .use(simplifyBlocks, {
       orderedListItemBlockTypes: new Set<string>(["numberedListItem"]),
-      unorderedListItemBlockTypes: new Set<string>(["bulletListItem"]),
+      unorderedListItemBlockTypes: new Set<string>([
+        "bulletListItem",
+        "taskListItem",
+        "checkListItem",
+      ]),
     })
     .use(rehypeStringify)
     .process(htmlParentElement.innerHTML);

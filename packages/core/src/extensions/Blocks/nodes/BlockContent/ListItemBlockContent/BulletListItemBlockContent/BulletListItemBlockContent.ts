@@ -34,7 +34,6 @@ export const BulletListItemBlockContent = createTipTapBlock<"bulletListItem">({
 
   parseHTML() {
     return [
-      // Case for regular HTML list structure.
       {
         tag: "li",
         getAttrs: (element) => {
@@ -54,7 +53,7 @@ export const BulletListItemBlockContent = createTipTapBlock<"bulletListItem">({
 
           return false;
         },
-        node: "bulletListItem",
+        node: this.name,
       },
       // Case for BlockNote list structure.
       {
@@ -77,7 +76,7 @@ export const BulletListItemBlockContent = createTipTapBlock<"bulletListItem">({
           return false;
         },
         priority: 300,
-        node: "bulletListItem",
+        node: this.name,
       },
     ];
   },

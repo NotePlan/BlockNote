@@ -2,6 +2,7 @@
 import "@blocknote/core/style.css";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
 import styles from "./App.module.css";
+import { parseMarkdown } from "../../../packages/core/src/api/formatConversions/npMarkdownConversions";
 
 type WindowWithProseMirror = Window &
   typeof globalThis & { ProseMirror: any; editor?: any };
@@ -17,6 +18,8 @@ function App() {
         "editorContent",
         JSON.stringify(editor.topLevelBlocks)
       );
+
+      console.log(editor.topLevelBlocks);
     },
     editorDOMAttributes: {
       class: styles.editor,
@@ -28,6 +31,7 @@ function App() {
   // Give tests a way to get prosemirror instance
   (window as WindowWithProseMirror).ProseMirror = editor?._tiptapEditor;
   (window as WindowWithProseMirror).editor = editor;
+  window.parseMarkdown = parseMarkdown;
 
   return <BlockNoteView editor={editor} />;
 }
