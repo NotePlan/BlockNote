@@ -22,6 +22,7 @@ export const CheckListItemBlockContent = createTipTapBlock<"checkListItem">({
               props: {
                 checked: "false",
                 canceled: "false",
+                scheduled: "false",
               },
             })
             // Removes the "*" character used to set the list.
