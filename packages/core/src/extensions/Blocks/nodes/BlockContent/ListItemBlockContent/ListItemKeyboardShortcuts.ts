@@ -46,42 +46,49 @@ export const handleEnter = (editor: Editor) => {
   ]);
 };
 
-export const handleComplete = (editor: Editor) => {
-  const node = editor.state.selection.$from.node();
+export const handleAttribute = (
+  editor: Editor,
+  attribute: "checked" | "cancelled" | "scheduled"
+) => {
+  const { from, to } = editor.state.selection;
 
-  console.log(node.attrs);
-  if (node) {
-    // transaction to toggle checked attribute
-    return editor
-      .chain()
-      .command(({ tr }) => {
-        tr.setNodeMarkup(editor.state.selection.$from.before(), undefined, {
-          checked: !node.attrs.checked,
-          cancelled: false,
-          scheduled: false,
-        });
-        return true;
-      })
-      .run();
-  }
-  return false;
-};
+  // First, find if any node in the range has attribute = false
+  let anyUnset = false;
+  editor.state.doc.nodesBetween(from, to, (node) => {
+    if (node.attrs[attribute] !== undefined && !node.attrs[attribute]) {
+      anyUnset = true;
+    }
+  });
 
-export const handleCancel = (editor: Editor) => {
-  const node = editor.state.selection.$from.node();
-  if (node) {
-    // transaction to toggle checked attribute
-    return editor
-      .chain()
-      .command(({ tr }) => {
-        tr.setNodeMarkup(editor.state.selection.$from.before(), undefined, {
-          checked: false,
-          cancelled: !node.attrs.cancelled,
-          scheduled: false,
-        });
-        return true;
-      })
-      .run();
-  }
-  return false;
+  // Then, set all nodes' attribute based on anyUnset
+  editor.state.doc.nodesBetween(from, to, (node, pos) => {
+    if (node.attrs[attribute] !== undefined) {
+      const newAttributes = {
+        ...node.attrs,
+        [attribute]: anyUnset, // if any node had attribute = false, all nodes will have it set to true
+      };
+
+      if (attribute !== "cancelled") {
+        newAttributes.cancelled = false;
+      }
+
+      if (attribute !== "scheduled") {
+        newAttributes.scheduled = false;
+      }
+
+      if (attribute !== "checked") {
+        newAttributes.checked = false;
+      }
+
+      editor
+        .chain()
+        .command(({ tr }) => {
+          tr.setNodeMarkup(pos, undefined, newAttributes);
+          return true;
+        })
+        .run();
+    }
+  });
+
+  return true;
 };

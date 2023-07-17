@@ -1,10 +1,6 @@
 import { InputRule } from "@tiptap/core";
 import { createTipTapBlock } from "../../../../api/block";
-import {
-  handleEnter,
-  handleComplete,
-  handleCancel,
-} from "../ListItemKeyboardShortcuts";
+import { handleEnter, handleAttribute } from "../ListItemKeyboardShortcuts";
 import { TaskListItemNodeView } from "./TaskListItemNodeView";
 import { TaskListItemHTMLParser } from "./TaskListItemHTMLParser";
 import { TaskListItemListHTMLRender } from "./TaskListItemHTMLRender";
@@ -38,8 +34,8 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
   addKeyboardShortcuts() {
     return {
       Enter: () => handleEnter(this.editor),
-      "Cmd-d": () => handleComplete(this.editor),
-      "Cmd-s": () => handleCancel(this.editor),
+      "Cmd-d": () => handleAttribute(this.editor, "checked"),
+      "Cmd-s": () => handleAttribute(this.editor, "cancelled"),
     };
   },
 
