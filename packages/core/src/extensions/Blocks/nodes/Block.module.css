@@ -326,7 +326,8 @@ NESTED BLOCKS
   position: relative;
 
   &[data-checked="true"],
-  &[data-cancelled="true"] {
+  &[data-cancelled="true"],
+  &[data-scheduled="true"] {
     opacity: 0.4;
   }
 
@@ -343,6 +344,12 @@ NESTED BLOCKS
 
   &[data-cancelled="true"] > label:before {
     content: "\f057";
+    font: var(--fa-font-regular);
+    color: inherit;
+  }
+
+  &[data-scheduled="true"] > label:before {
+    content: "\f017";
     font: var(--fa-font-regular);
     color: inherit;
   }
@@ -377,6 +384,11 @@ NESTED BLOCKS
 
   &[data-cancelled="true"] > label:before {
     content: "\f2d3";
+  }
+
+  /* TODO: Need to get the custom icon working here from the native apps */
+  &[data-scheduled="true"] > label:before {
+    content: "\f017";
   }
 }
 

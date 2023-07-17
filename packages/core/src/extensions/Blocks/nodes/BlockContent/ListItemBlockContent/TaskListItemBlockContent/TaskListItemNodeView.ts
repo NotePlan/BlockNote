@@ -18,6 +18,7 @@ export function TaskListItemNodeView(
   dom.dataset.contentType = type;
   dom.dataset.checked = checked;
   dom.dataset.cancelled = node.attrs.cancelled || false;
+  dom.dataset.scheduled = node.attrs.scheduled || false;
 
   const label = document.createElement("label");
   const input = document.createElement("input");
@@ -48,6 +49,7 @@ export function TaskListItemNodeView(
               : currentNode.attrs),
             checked: altKey ? true : checked,
             cancelled: altKey ? true : false,
+            scheduled: false,
           });
           return true;
         })
@@ -74,6 +76,7 @@ export function TaskListItemNodeView(
 
       dom.dataset.checked = updatedNode.attrs.checked || false;
       dom.dataset.cancelled = updatedNode.attrs.cancelled || false;
+      dom.dataset.scheduled = updatedNode.attrs.scheduled || false;
 
       if (updatedNode.attrs.checked) {
         input.setAttribute("checked", "checked");

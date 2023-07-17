@@ -59,6 +59,13 @@ export const CheckListItemBlockContent = createTipTapBlock<"checkListItem">({
           "data-cancelled": attributes.cancelled,
         }),
       },
+      scheduled: {
+        default: false,
+        parseHTML: (element) => element.getAttribute("data-scheduled"),
+        renderHTML: (attributes) => ({
+          "data-scheduled": attributes.scheduled,
+        }),
+      },
     };
   },
 

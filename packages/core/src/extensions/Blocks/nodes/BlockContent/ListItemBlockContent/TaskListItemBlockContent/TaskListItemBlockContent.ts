@@ -60,6 +60,14 @@ export const TaskListItemBlockContent = createTipTapBlock<"taskListItem">({
           "data-cancelled": attributes.cancelled,
         }),
       },
+      scheduled: {
+        default: false,
+        keepOnSplit: false,
+        parseHTML: (element) => element.getAttribute("data-scheduled"),
+        renderHTML: (attributes) => ({
+          "data-scheduled": attributes.scheduled,
+        }),
+      },
     };
   },
 

@@ -58,7 +58,7 @@ export const handleComplete = (editor: Editor) => {
         tr.setNodeMarkup(editor.state.selection.$from.before(), undefined, {
           checked: !node.attrs.checked,
           cancelled: false,
-          checklist: node.attrs.checklist,
+          scheduled: false,
         });
         return true;
       })
@@ -77,7 +77,7 @@ export const handleCancel = (editor: Editor) => {
         tr.setNodeMarkup(editor.state.selection.$from.before(), undefined, {
           checked: false,
           cancelled: !node.attrs.cancelled,
-          checklist: node.attrs.checklist,
+          scheduled: false,
         });
         return true;
       })
