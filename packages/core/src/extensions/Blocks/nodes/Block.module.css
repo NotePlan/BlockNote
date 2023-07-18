@@ -132,10 +132,10 @@ NESTED BLOCKS
 
 /* HEADINGS*/
 [data-level="1"] {
-  --level: 3em;
+  --level: 1.9em;
 }
 [data-level="2"] {
-  --level: 2em;
+  --level: 1.6em;
 }
 [data-level="3"] {
   --level: 1.3em;
