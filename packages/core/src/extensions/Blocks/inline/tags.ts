@@ -5,8 +5,9 @@ export interface HashtagOptions {
   HTMLAttributes: Record<string, any>;
 }
 
-export const hashtagInputRegex = /(?<=(^|\s))(((#|@)(?:[\w-_/]+)))$/;
-export const hashtagPasteRegex = /(?<=(^|\s))(((#|@)(?:[\w-_/]+)))/g;
+export const hashtagInputRegex = /((#|@)[\w-_/]+)$/;
+export const hashtagPasteRegex = /((^|\s)#[\w-_/]+)/g;
+export const mentionPasteRegex = /((^|\s)@[\w-_/]+)/g;
 
 export const Hashtag = Mark.create<HashtagOptions>({
   name: "hashtag",
@@ -66,6 +67,10 @@ export const Hashtag = Mark.create<HashtagOptions>({
         find: hashtagPasteRegex,
         type: this.type,
       }),
+      markPasteRule({
+        find: mentionPasteRegex,
+        type: this.type,
+      }),
     ];
   },
 
@@ -78,8 +83,6 @@ export const Hashtag = Mark.create<HashtagOptions>({
             const { state } = view;
             const { $from } = state.selection;
             const markType = this.type;
-
-            console.log($from.marks().some((mark) => mark.type === markType));
 
             if (
               text === " " &&
