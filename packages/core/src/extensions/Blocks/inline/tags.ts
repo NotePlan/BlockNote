@@ -5,7 +5,7 @@ export interface HashtagOptions {
   HTMLAttributes: Record<string, any>;
 }
 
-export const hashtagInputRegex = /((#|@)[\w-_/]+)$/;
+export const hashtagInputRegex = /(?<=(^|\s))((#|@)[\w-_/]+)$/;
 export const hashtagPasteRegex = /((^|\s)#[\w-_/]+)/g;
 export const mentionPasteRegex = /((^|\s)@[\w-_/]+)/g;
 
