@@ -78,6 +78,7 @@
     "remark-parse": "^10.0.1",
     "remark-rehype": "^10.1.0",
     "remark-stringify": "^10.0.2",
+    "tokenizr": "^1.6.10",
     "unified": "^10.1.2",
     "uuid": "^8.3.2",
     "y-prosemirror": "1.0.20",
