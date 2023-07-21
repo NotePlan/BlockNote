@@ -27,6 +27,7 @@ const toggleStyles = new Set<ToggledStyle>([
   "strike",
   "code",
   "hashtag",
+  "wikilink",
 ]);
 const colorStyles = new Set<ColorStyle>(["textColor", "backgroundColor"]);
 

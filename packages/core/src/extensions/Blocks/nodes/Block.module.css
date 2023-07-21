@@ -557,3 +557,11 @@ a[data-hashtag] {
   background-color: #d8700120; /* replace with your desired background color */
   text-decoration: none; /* optional: removes underline if your hashtags are also links */
 }
+
+/* HASHTAG */
+a[data-wikilink] {
+  color: var(--orange-noteplan);
+  cursor: pointer;
+
+  text-decoration: none; /* optional: removes underline if your hashtags are also links */
+}

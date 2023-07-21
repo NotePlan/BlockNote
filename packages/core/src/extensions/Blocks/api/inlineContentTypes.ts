@@ -7,6 +7,7 @@ export type Styles = {
   textColor?: string;
   backgroundColor?: string;
   hashtag?: true;
+  wikilink?: true;
 };
 
 export type ToggledStyle = {

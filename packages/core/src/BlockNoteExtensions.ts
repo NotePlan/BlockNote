@@ -4,7 +4,8 @@ import { BlockNoteEditor } from "./BlockNoteEditor";
 
 import { Bold } from "@tiptap/extension-bold";
 import { Code } from "@tiptap/extension-code";
-import { Hashtag } from "./extensions/Blocks/inline/tags";
+import { Hashtag } from "./extensions/Blocks/inline/hashtags";
+import { WikiLink } from "./extensions/Blocks/inline/wikiLinks";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { Dropcursor } from "@tiptap/extension-dropcursor";
@@ -101,6 +102,7 @@ export const getBlockNoteExtensions = <BSchema extends BlockSchema>(opts: {
     Strike,
     Underline,
     Hashtag,
+    WikiLink,
     TextColorMark,
     TextColorExtension,
     BackgroundColorMark,
