@@ -549,7 +549,7 @@ code {
 }
 
 /* HASHTAG */
-span[data-hashtag] {
+a[data-hashtag] {
   color: var(--orange-noteplan);
   cursor: pointer;
   padding: 2px 5px; /* adjust as needed */

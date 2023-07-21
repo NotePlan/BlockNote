@@ -1,8 +1,9 @@
-import { InputRule, Mark, markPasteRule } from "@tiptap/core";
+import { Mark } from "@tiptap/core";
 import { Plugin } from "prosemirror-state";
 
 export interface HashtagOptions {
   HTMLAttributes: Record<string, any>;
+  href: string;
 }
 // export const hashtagInputRegex = /(?<=(^|\s))((#|@)[\w-_/]+)$/;
 
@@ -16,14 +17,16 @@ export const Hashtag = Mark.create<HashtagOptions>({
   parseHTML() {
     return [
       {
-        tag: "span",
+        tag: "a",
         getAttrs: (element: HTMLElement | string) => {
           if (typeof element === "string") {
             return false;
           }
 
           if (element.getAttribute("data-hashtag") === this.name) {
-            return {};
+            return {
+              href: element.getAttribute("href") || null,
+            };
           }
 
           return false;
@@ -32,12 +35,28 @@ export const Hashtag = Mark.create<HashtagOptions>({
     ];
   },
 
-  renderHTML() {
-    return ["span", { "data-hashtag": this.name }, 0];
+  renderHTML({ HTMLAttributes }) {
+    return [
+      "a",
+      {
+        ...HTMLAttributes,
+        href: "/?search=" + HTMLAttributes.href,
+        target: "_self",
+        "data-hashtag": this.name,
+      },
+      0,
+    ];
   },
 
   addAttributes() {
     return {
+      href: {
+        default: "test",
+        parseHTML: (element) => element.getAttribute("href"),
+        renderHTML: (attributes) => ({
+          href: attributes.href,
+        }),
+      },
       hashtag: {
         default: false,
         parseHTML: (element) => element.getAttribute("data-hashtag"),
@@ -47,33 +66,6 @@ export const Hashtag = Mark.create<HashtagOptions>({
       },
     };
   },
-
-  //   addInputRules() {
-  //     return [
-  //       new InputRule({
-  //         find: new RegExp(hashtagInputRegex),
-  //         handler: ({ state, match, range }) => {
-  //           const attrs = { hashtag: true };
-  //           const tr = state.tr.insertText(match[0], range.from, range.to);
-  //           state.tr.addMark(range.from, range.to + 1, this.type.create(attrs));
-  //           state.applyTransaction(tr);
-  //         },
-  //       }),
-  //     ];
-  //   },
-
-  //   addPasteRules() {
-  //     return [
-  //       markPasteRule({
-  //         find: hashtagPasteRegex,
-  //         type: this.type,
-  //       }),
-  //       markPasteRule({
-  //         find: mentionPasteRegex,
-  //         type: this.type,
-  //       }),
-  //     ];
-  //   },
 
   addProseMirrorPlugins() {
     // this plugin will clear the hashtag mark when a space is typed
@@ -104,11 +96,16 @@ export const Hashtag = Mark.create<HashtagOptions>({
             // If there is a valid mention or hashtag, add the mark
             const fromHashtag = lineStart + match.index + 1;
             const toHashtag = fromHashtag + match[0].length;
-            const attrs = { hashtag: true };
+            const attrs = { hashtag: true, href: match[0] };
             tr.addMark(fromHashtag, toHashtag, markType.create(attrs));
           }
 
-          return tr;
+          if (tr.docChanged) {
+            // Only return the transaction if the document has changed
+            return tr;
+          } else {
+            return newState.tr;
+          }
         },
       }),
     ];
