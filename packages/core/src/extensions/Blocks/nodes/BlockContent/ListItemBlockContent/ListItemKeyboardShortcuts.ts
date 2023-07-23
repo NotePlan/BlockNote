@@ -94,15 +94,23 @@ export const handleAttribute = (
 };
 
 export const handleMove = (editor: Editor, direction: "up" | "down") => {
-  const { from, to } = editor.state.selection;
+  const { $anchor, $head } = editor.state.selection;
+
+  // Look for items with this as the parent node
+  const parentNode = $head.node(-2);
 
   const nodes: any[] = [];
-  editor.state.doc.nodesBetween(from, to, (node) => {
-    // Check if defaultBlockSchema has the node type
-    if (node.type.name === "blockContainer") {
-      nodes.push(node);
+  editor.state.doc.nodesBetween(
+    $anchor.pos,
+    $head.pos,
+    (node, _pos, parent) => {
+      if (parent !== null && parent.eq(parentNode)) {
+        nodes.push(node);
+        return false;
+      }
+      return;
     }
-  });
+  );
 
   // Save first and last nodes for setting the cursor later
   const startNode = editor.state.selection.$from.node(-1);
