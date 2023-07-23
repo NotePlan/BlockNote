@@ -9,7 +9,11 @@ import {
 import { diffChars } from "diff";
 
 import { useEffect, useState } from "react";
-import { BlockNoteEditor, BlockSchema, PartialBlock } from "@blocknote/core";
+import {
+  BlockNoteEditor,
+  DefaultBlockSchema,
+  PartialBlock,
+} from "@blocknote/core";
 
 type WindowWithProseMirror = Window &
   typeof globalThis & { ProseMirror: any; editor?: any };
@@ -18,7 +22,6 @@ function App() {
   const [input, setInput] = useState<string>("");
   const [markdown, setMarkdown] = useState<string>("");
   const [json, setJSON] = useState<string>("");
-  const [equals, setEquals] = useState<boolean>(false);
   const [diff, setDiff] = useState<string>("");
 
   const editor: BlockNoteEditor | null = useBlockNote({
@@ -27,9 +30,7 @@ function App() {
       setMarkdown(note);
       const json: string = JSON.stringify(editor.topLevelBlocks, null, 2);
       setJSON(json);
-      if (input === note) {
-        setEquals(true);
-      } else {
+      if (input !== note) {
         // calculate diff
         const diffResult = diffChars(input, note);
         let diffString = "";
@@ -37,7 +38,6 @@ function App() {
           const color = part.added ? "blue" : part.removed ? "red" : "grey";
           diffString += `<span style="color:${color}">${part.value}</span>`;
         });
-        console.log(diffString);
         setDiff(diffString);
       }
     },
@@ -53,8 +53,8 @@ function App() {
       // Whenever the current Markdown content changes, converts it to an array
       // of PartialBlock objects and replaces the editor's content with them.
       const getBlocks = async () => {
-        const blocks: PartialBlock<BlockSchema>[] = parseNoteToBlocks(input);
-        console.log(blocks);
+        const blocks: PartialBlock<DefaultBlockSchema>[] =
+          parseNoteToBlocks(input);
         editor.replaceBlocks(editor.topLevelBlocks, blocks);
       };
       getBlocks();
