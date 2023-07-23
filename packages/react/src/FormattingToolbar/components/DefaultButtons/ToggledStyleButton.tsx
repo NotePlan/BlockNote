@@ -6,6 +6,8 @@ import {
   RiItalic,
   RiStrikethrough,
   RiUnderline,
+  RiHashtag,
+  RiLink,
 } from "react-icons/ri";
 import { BlockNoteEditor, BlockSchema, ToggledStyle } from "@blocknote/core";
 import { IconType } from "react-icons";
@@ -16,6 +18,8 @@ const shortcuts: Record<ToggledStyle, string> = {
   underline: "Mod+U",
   strike: "Mod+Shift+X",
   code: "",
+  hashtag: "",
+  wikilink: "",
 };
 
 const icons: Record<ToggledStyle, IconType> = {
@@ -24,13 +28,14 @@ const icons: Record<ToggledStyle, IconType> = {
   underline: RiUnderline,
   strike: RiStrikethrough,
   code: RiCodeFill,
+  hashtag: RiHashtag,
+  wikilink: RiLink,
 };
 
 export const ToggledStyleButton = <BSchema extends BlockSchema>(props: {
   editor: BlockNoteEditor<BSchema>;
   toggledStyle: ToggledStyle;
 }) => {
-
   const toggleStyle = (style: ToggledStyle) => {
     props.editor.focus();
     props.editor.toggleStyles({ [style]: true });

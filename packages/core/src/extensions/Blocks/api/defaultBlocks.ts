@@ -18,6 +18,11 @@ export const defaultProps = {
     default: "left" as const,
     values: ["left", "center", "right", "justify"] as const,
   },
+} satisfies PropSchema;
+
+export type DefaultProps = typeof defaultProps;
+
+const taskAndCheckProps = {
   checked: {
     default: "false" as const,
   },
@@ -29,11 +34,18 @@ export const defaultProps = {
   },
 } satisfies PropSchema;
 
-export type DefaultProps = typeof defaultProps;
+const levelProps = {
+  level: {
+    default: "0" as const,
+  },
+} satisfies PropSchema;
 
 export const defaultBlockSchema = {
   paragraph: {
-    propSchema: defaultProps,
+    propSchema: {
+      ...defaultProps,
+      ...levelProps,
+    },
     node: ParagraphBlockContent,
   },
   heading: {
@@ -44,23 +56,40 @@ export const defaultBlockSchema = {
     node: HeadingBlockContent,
   },
   bulletListItem: {
-    propSchema: defaultProps,
+    propSchema: {
+      ...defaultProps,
+      ...levelProps,
+    },
     node: BulletListItemBlockContent,
   },
   taskListItem: {
-    propSchema: defaultProps,
+    propSchema: {
+      ...defaultProps,
+      ...levelProps,
+      ...taskAndCheckProps,
+    },
     node: TaskListItemBlockContent,
   },
   checkListItem: {
-    propSchema: defaultProps,
+    propSchema: {
+      ...defaultProps,
+      ...levelProps,
+      ...taskAndCheckProps,
+    },
     node: CheckListItemBlockContent,
   },
   quoteListItem: {
-    propSchema: defaultProps,
+    propSchema: {
+      ...defaultProps,
+      ...levelProps,
+    },
     node: QuotListItemBlockContent,
   },
   numberedListItem: {
-    propSchema: defaultProps,
+    propSchema: {
+      ...defaultProps,
+      ...levelProps,
+    },
     node: NumberedListItemBlockContent,
   },
 } as const;
