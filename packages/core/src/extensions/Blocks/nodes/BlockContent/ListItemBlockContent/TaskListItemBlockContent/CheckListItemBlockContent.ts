@@ -1,10 +1,6 @@
 import { InputRule } from "@tiptap/core";
 import { createTipTapBlock } from "../../../../api/block";
-import {
-  handleEnter,
-  handleComplete,
-  handleCancel,
-} from "../ListItemKeyboardShortcuts";
+import { handleEnter, handleAttribute } from "../ListItemKeyboardShortcuts";
 import { TaskListItemNodeView } from "./TaskListItemNodeView";
 import { TaskListItemHTMLParser } from "./TaskListItemHTMLParser";
 import { TaskListItemListHTMLRender } from "./TaskListItemHTMLRender";
@@ -26,6 +22,7 @@ export const CheckListItemBlockContent = createTipTapBlock<"checkListItem">({
               props: {
                 checked: "false",
                 canceled: "false",
+                scheduled: "false",
               },
             })
             // Removes the "*" character used to set the list.
@@ -38,8 +35,8 @@ export const CheckListItemBlockContent = createTipTapBlock<"checkListItem">({
   addKeyboardShortcuts() {
     return {
       Enter: () => handleEnter(this.editor),
-      "Cmd-d": () => handleComplete(this.editor),
-      "Cmd-s": () => handleCancel(this.editor),
+      "Cmd-d": () => handleAttribute(this.editor, "checked"),
+      "Cmd-s": () => handleAttribute(this.editor, "cancelled"),
     };
   },
 
@@ -57,6 +54,13 @@ export const CheckListItemBlockContent = createTipTapBlock<"checkListItem">({
         parseHTML: (element) => element.getAttribute("data-cancelled"),
         renderHTML: (attributes) => ({
           "data-cancelled": attributes.cancelled,
+        }),
+      },
+      scheduled: {
+        default: false,
+        parseHTML: (element) => element.getAttribute("data-scheduled"),
+        renderHTML: (attributes) => ({
+          "data-scheduled": attributes.scheduled,
         }),
       },
     };

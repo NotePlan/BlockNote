@@ -132,10 +132,10 @@ NESTED BLOCKS
 
 /* HEADINGS*/
 [data-level="1"] {
-  --level: 3em;
+  --level: 1.9em;
 }
 [data-level="2"] {
-  --level: 2em;
+  --level: 1.6em;
 }
 [data-level="3"] {
   --level: 1.3em;
@@ -326,7 +326,8 @@ NESTED BLOCKS
   position: relative;
 
   &[data-checked="true"],
-  &[data-cancelled="true"] {
+  &[data-cancelled="true"],
+  &[data-scheduled="true"] {
     opacity: 0.4;
   }
 
@@ -343,6 +344,12 @@ NESTED BLOCKS
 
   &[data-cancelled="true"] > label:before {
     content: "\f057";
+    font: var(--fa-font-regular);
+    color: inherit;
+  }
+
+  &[data-scheduled="true"] > label:before {
+    content: "\f017";
     font: var(--fa-font-regular);
     color: inherit;
   }
@@ -377,6 +384,11 @@ NESTED BLOCKS
 
   &[data-cancelled="true"] > label:before {
     content: "\f2d3";
+  }
+
+  /* TODO: Need to get the custom icon working here from the native apps */
+  &[data-scheduled="true"] > label:before {
+    content: "\f017";
   }
 }
 
@@ -436,6 +448,13 @@ NESTED BLOCKS
 .blockContent[data-content-type="numberedListItem"].isEmpty
   .inlineContent:before {
   content: "List";
+}
+
+/* Inline Code */
+code {
+  color: #0091f9;
+  font-family: "SF Mono", Menlo, Monaco, "Courier New", Courier, monospace;
+  font-weight: 550;
 }
 
 /* TEXT COLORS */
@@ -527,4 +546,22 @@ NESTED BLOCKS
 
 [data-text-alignment="justify"] {
   text-align: justify;
+}
+
+/* HASHTAG */
+a[data-hashtag] {
+  color: var(--orange-noteplan);
+  cursor: pointer;
+  padding: 2px 5px; /* adjust as needed */
+  border-radius: 10px; /* this gives the pill shape */
+  background-color: #d8700120; /* replace with your desired background color */
+  text-decoration: none; /* optional: removes underline if your hashtags are also links */
+}
+
+/* HASHTAG */
+a[data-wikilink] {
+  color: var(--orange-noteplan);
+  cursor: pointer;
+
+  text-decoration: none; /* optional: removes underline if your hashtags are also links */
 }

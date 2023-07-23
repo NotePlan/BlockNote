@@ -1,10 +1,18 @@
 import { mergeAttributes } from "@tiptap/core";
 import { createTipTapBlock } from "../../../api/block";
 import styles from "../../Block.module.css";
+import { handleMove } from "../ListItemBlockContent/ListItemKeyboardShortcuts";
 
 export const ParagraphBlockContent = createTipTapBlock<"paragraph">({
   name: "paragraph",
   content: "inline*",
+
+  addKeyboardShortcuts() {
+    return {
+      "Control-alt-ArrowDown": () => handleMove(this.editor, "down"),
+      "Control-alt-ArrowUp": () => handleMove(this.editor, "up"),
+    };
+  },
 
   parseHTML() {
     return [
