@@ -2,7 +2,11 @@
 import "@blocknote/core/style.css";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
 import styles from "./App.module.css";
-import { parseNoteToBlocks } from "../../../packages/core/src/api/formatConversions/notePlanConversions";
+import {
+  parseNoteToBlocks,
+  serializeBlocksToNote,
+} from "../../../packages/core/src/api/formatConversions/notePlanConversions";
+import { diffChars } from "diff";
 
 import { useEffect, useState } from "react";
 import { BlockNoteEditor, BlockSchema, PartialBlock } from "@blocknote/core";
@@ -14,18 +18,28 @@ function App() {
   const [input, setInput] = useState<string>("");
   const [markdown, setMarkdown] = useState<string>("");
   const [json, setJSON] = useState<string>("");
+  const [equals, setEquals] = useState<boolean>(false);
+  const [diff, setDiff] = useState<string>("");
 
   const editor: BlockNoteEditor | null = useBlockNote({
     onEditorContentChange: (editor: BlockNoteEditor) => {
-      const saveBlocksAsMarkdown = async () => {
-        const markdown: string = await editor.blocksToMarkdown(
-          editor.topLevelBlocks
-        );
-        setMarkdown(markdown);
-        const json: string = JSON.stringify(editor.topLevelBlocks, null, 2);
-        setJSON(json);
-      };
-      saveBlocksAsMarkdown();
+      const note = serializeBlocksToNote(editor.topLevelBlocks);
+      setMarkdown(note);
+      const json: string = JSON.stringify(editor.topLevelBlocks, null, 2);
+      setJSON(json);
+      if (input === note) {
+        setEquals(true);
+      } else {
+        // calculate diff
+        const diffResult = diffChars(input, note);
+        let diffString = "";
+        diffResult.forEach((part) => {
+          const color = part.added ? "blue" : part.removed ? "red" : "grey";
+          diffString += `<span style="color:${color}">${part.value}</span>`;
+        });
+        console.log(diffString);
+        setDiff(diffString);
+      }
     },
     editorDOMAttributes: {
       class: styles.editor,
@@ -61,9 +75,15 @@ function App() {
       />
       <h3>Editor</h3>
       <BlockNoteView editor={editor} />
+      {diff && (
+        <div>
+          <h3>Diff</h3>
+          <pre dangerouslySetInnerHTML={{ __html: diff }} />
+        </div>
+      )}
       <h3>Output</h3>
-      <pre>{json}</pre>
       <pre>{markdown}</pre>
+      <pre>{json}</pre>
     </div>
   );
 }

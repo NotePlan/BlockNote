@@ -23,7 +23,9 @@ import {
   Block,
   BlockIdentifier,
   BlockSchema,
+  BlockSpec,
   PartialBlock,
+  PropSchema,
 } from "./extensions/Blocks/api/blockTypes";
 import { TextCursorPosition } from "./extensions/Blocks/api/cursorPositionTypes";
 import {
@@ -41,6 +43,10 @@ import {
   BaseSlashMenuItem,
   defaultSlashMenuItems,
 } from "./extensions/SlashMenu";
+import {
+  parseNoteToBlocks,
+  serializeBlocksToNote,
+} from "./api/formatConversions/notePlanConversions";
 
 export type BlockNoteEditorOptions<BSchema extends BlockSchema> = {
   // TODO: Figure out if enableBlockNoteExtensions/disableHistoryExtension are needed and document them.
@@ -723,6 +729,15 @@ export class BlockNoteEditor<BSchema extends BlockSchema = DefaultBlockSchema> {
   }
 
   /**
+   * Serializes blocks into a NotePlan string.
+   * @param blocks An array of blocks that should be serialized into a NotePlan string.
+   * @returns The blocks, serialized as a NotePlan string.
+   */
+  public blocksToNotePlan(blocks: Block<BlockSchema>[]): string {
+    return serializeBlocksToNote(blocks);
+  }
+
+  /**
    * Creates a list of blocks from a Markdown string. Tries to create `Block` and `InlineNode` objects based on
    * Markdown syntax, though not all symbols are recognized. If BlockNote doesn't recognize a symbol, it will parse it
    * as text.
@@ -731,6 +746,15 @@ export class BlockNoteEditor<BSchema extends BlockSchema = DefaultBlockSchema> {
    */
   public async markdownToBlocks(markdown: string): Promise<Block<BSchema>[]> {
     return markdownToBlocks(markdown, this.schema, this._tiptapEditor.schema);
+  }
+
+  /**
+   * Creates a list of blocks from a NotePlan string.
+   * @param notePlan The NotePlan string to parse blocks from.
+   * @returns The blocks parsed from the NotePlan string.
+   */
+  public notePlanToBlocks(notePlan: string): PartialBlock<BlockSchema>[] {
+    return parseNoteToBlocks(notePlan);
   }
 
   /**

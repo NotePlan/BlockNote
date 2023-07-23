@@ -1,10 +1,14 @@
 import {
+  Block,
   PartialBlock,
   BlockSchema,
   PropSchema,
   Props,
 } from "../../extensions/Blocks/api/blockTypes";
-import { PartialInlineContent } from "../../extensions/Blocks/api/inlineContentTypes";
+import {
+  InlineContent,
+  PartialInlineContent,
+} from "../../extensions/Blocks/api/inlineContentTypes";
 import { DefaultBlockSchema } from "../..";
 import Tokenizr from "tokenizr";
 
@@ -275,7 +279,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
         inlineContent.push({
           type: "link",
           href: token.value,
-          content: token.value,
+          content: "file",
         });
         downloadFile(token.value, false);
         break;
@@ -283,7 +287,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
         inlineContent.push({
           type: "link",
           href: token.value,
-          content: token.value,
+          content: "image",
         });
         downloadFile(token.value, true);
         break;
@@ -744,4 +748,137 @@ export function parseNoteToBlocks(note: string): PartialBlock<BlockSchema>[] {
   }
   postProcessBlocks(blocks);
   return blocks;
+}
+
+function serializeTaskStates(prop: Props<PropSchema>): string {
+  if (prop.checked === "true") {
+    return "[x]";
+  } else if (prop.canceled === "true") {
+    return "[-]";
+  } else if (prop.scheduled === "true") {
+    return "[>]";
+  } else {
+    return "[ ]";
+  }
+}
+
+function serializeBlockContent(content: InlineContent[]): string {
+  let text = "";
+  let contentLength = content.length;
+  for (let i = 0; i < contentLength; ++i) {
+    let contentItem = content[i];
+    switch (contentItem.type) {
+      case "text":
+        // serialize styles
+        if (contentItem.styles.bold) {
+          text += "**" + contentItem.text + "**";
+        } else if (contentItem.styles.italic) {
+          text += "*" + contentItem.text + "*";
+        } else if (contentItem.styles.strike) {
+          text += "~~" + contentItem.text + "~~";
+        } else if (contentItem.styles.backgroundColor === "highlight-color") {
+          text += "::" + contentItem.text + "::";
+        } else if (contentItem.styles.code) {
+          text += "`" + contentItem.text + "`";
+        } else {
+          text += contentItem.text;
+        }
+        break;
+      case "link":
+        const linkContent = serializeBlockContent(contentItem.content);
+        switch (linkContent) {
+          case "file":
+          case "image":
+            text += "![" + linkContent + "](" + contentItem.href + ")";
+            break;
+          default:
+            text += "[" + linkContent + "](" + contentItem.href + ")";
+            break;
+        }
+        break;
+    }
+  }
+  return text;
+}
+
+export function serializeBlock(
+  block: Block<BlockSchema>,
+  depth: number
+): string {
+  let text = "  ".repeat(depth);
+  // serialize block types
+  switch (block.type) {
+    case "heading":
+      text += "#".repeat(parseInt(block.props?.level || "1")) + " ";
+      break;
+    case "quoteListItem":
+      text += "> ";
+      break;
+    case "bulletListItem":
+      text += "- ";
+      break;
+    case "numberedListItem":
+      text += "1. ";
+      break;
+    case "taskListItem":
+      text += "* " + serializeTaskStates(block.props || {}) + " ";
+      break;
+    case "checkListItem":
+      text += "+ " + serializeTaskStates(block.props || {}) + " ";
+      break;
+    case "paragraph":
+      break;
+  }
+
+  // serialize content array with InlineContent
+  text += serializeBlockContent(block.content);
+
+  // end block with newline
+  text += "\n";
+  let children = block.children || [];
+  let childrenLength = children.length;
+
+  for (let i = 0; i < childrenLength; ++i) {
+    text += serializeBlock(children[i], depth + 1);
+  }
+
+  return text;
+}
+
+function postProcessNote(note: string): string {
+  // adjust numbering of numbered list items according to their level
+  let lines = note.split(/\r?\n/);
+  let linesLength = lines.length;
+  let currentNumber = 0;
+  let previousLevel = 0;
+  for (let i = 0; i < linesLength; ++i) {
+    let line = lines[i];
+    let matches = /^(\s*?)(\d+)\.\s+(.*)/.exec(line);
+    console.log(matches);
+    if (matches != null) {
+      let leadingWhitespace = matches[1].length;
+      let level = 0;
+      if (leadingWhitespace > 1) {
+        level = Math.floor(leadingWhitespace / 2);
+      }
+      if (level === previousLevel) {
+        currentNumber++;
+      } else {
+        currentNumber = 1;
+      }
+      lines[i] = matches[1] + currentNumber.toString() + ". " + matches[3];
+      previousLevel = level;
+    }
+  }
+  return lines.join("\n");
+}
+
+export function serializeBlocksToNote(blocks: Block<BlockSchema>[]): string {
+  let text = "";
+  let blocksLength = blocks.length;
+  for (let i = 0; i < blocksLength; ++i) {
+    text += serializeBlock(blocks[i], 0);
+  }
+  // post process text
+  return postProcessNote(text);
 }
