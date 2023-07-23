@@ -47,7 +47,7 @@ function createBlock(
 }
 
 function createInlineContent(text: string): PartialInlineContent[] {
-  const wikilink = /(\[{2}(.*?)\]{2})/;
+  const wikilinkRegex = /(\[{2}(.*?)\]{2})/;
   const fileLinkRegex = /!\[(file)\]\(([^()]+)\)/;
   const imageLinkRegex = /!\[(image)\]\(([^()]+)\)/;
   const namedLinkRegex = /\[([^[\]]*)\]\(([^()]+)\)/;
@@ -62,7 +62,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
 
   let lexer = new Tokenizr();
   // wiki link
-  lexer.rule(wikilink, (ctx, match) => {
+  lexer.rule(wikilinkRegex, (ctx, match) => {
     ctx.accept("wiki-link", { name: match[1], link: match[2] });
   });
   // file link
@@ -118,7 +118,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
     ctx.accept("strike", match[1]);
   });
   // highlight
-  lexer.rule(/::(.*?)::/, (ctx, match) => {
+  lexer.rule(/==(.*?)==/, (ctx, match) => {
     ctx.accept("highlight", match[1]);
   });
   // plain text
@@ -334,6 +334,14 @@ function parseHeader4(line: string): PartialBlock<DefaultBlockSchema> | null {
   return parseHeader(line, /^#+\s+/, 4);
 }
 
+function parseSeparator(line: string): PartialBlock<DefaultBlockSchema> | null {
+  return parseIndentedBlock(
+    line,
+    /^\s*([-*]\s*){3,}$/,
+    "separator" as BlockType
+  );
+}
+
 function parseQuote(line: string): PartialBlock<DefaultBlockSchema> | null {
   return parseIndentedBlock(line, /^(\s*?)>\s+/, "quoteListItem" as BlockType);
 }
@@ -547,6 +555,7 @@ const parseFunctions = [
   parseHeader3,
   parseHeader4,
   parseQuote,
+  parseSeparator,
   parseToDoHyphen,
   parseToDoHyphenComplete,
   parseToDoHyphenCancelled,
@@ -732,7 +741,7 @@ function postProcessNote(note: string): string {
   for (let i = 0; i < linesLength; ++i) {
     let line = lines[i];
     let matches = /^(\s*?)(\d+)\.\s+(.*)/.exec(line);
-    console.log(matches);
+    // console.log(matches);
     if (matches != null) {
       let leadingWhitespace = matches[1].length;
       let level = 0;
