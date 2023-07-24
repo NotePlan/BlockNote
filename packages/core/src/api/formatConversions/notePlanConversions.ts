@@ -756,7 +756,12 @@ function postProcessNote(note: string): string {
       previousLevel = level;
     }
   }
-  return lines.join("\n");
+  let text = lines.join("\n");
+  // if there are more than one line and the last line is empty, remove it
+  if (linesLength > 1 && lines[linesLength - 1] === "") {
+    text = text.substring(0, text.length - 2);
+  }
+  return text;
 }
 
 export function serializeBlocksToNote(
