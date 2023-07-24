@@ -288,7 +288,6 @@ function parseParagraph(line: string): PartialBlock<DefaultBlockSchema> {
   }
 
   let matches = /^(\s*)\S*/.exec(line);
-  console.log(matches);
   if (matches != null) {
     let leadingWhitespace = matches[1].length;
     if (leadingWhitespace > 1) {
@@ -720,7 +719,6 @@ function postProcessNote(note: string): string {
   for (let i = 0; i < linesLength; ++i) {
     let line = lines[i];
     let matches = /^(\s*?)(\d+)\.\s+(.*)/.exec(line);
-    console.log(matches);
     if (matches != null) {
       let leadingWhitespace = matches[1].length;
       let level = 0;
