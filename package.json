@@ -26,6 +26,7 @@
     "test": "lerna run --stream test",
     "install-playwright": "npx playwright install --with-deps",
     "deploy": "lerna publish -- --access public",
+    "pack": "npm run build && cd packages/core/dist && npm pack && cd ../.. && cd react/dist && npm pack && cd ../../.. && mv packages/core/dist/*.tgz . && mv packages/react/dist/*.tgz .",
     "prepublishOnly": "npm run build && cp README.md packages/core/README.md && cp README.md packages/react/README.md",
     "postpublish": "rm -rf packages/core/README.md && rm -rf packages/react/README.md",
     "test-ct": "playwright test -c playwright-ct.config.ts --headed",

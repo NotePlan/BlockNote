@@ -33,3 +33,5 @@ release
 /test-results/
 /playwright-report/
 /playwright/.cache/
+blocknote-core-*.tgz
+blocknote-react-*.tgz
