@@ -1,5 +1,6 @@
 import {
   Block,
+  BlockSchema,
   PartialBlock,
   PropSchema,
   Props,
@@ -587,7 +588,7 @@ function parseNoteLine(line: string): PartialBlock<DefaultBlockSchema> {
   return createBlock("paragraph" as BlockType, line);
 }
 
-function postProcessBlocks(blocks: PartialBlock<DefaultBlockSchema>[]): void {
+function postProcessBlocks(blocks: PartialBlock<BlockSchema>[]): void {
   let blocksLength = blocks.length;
   // go through all blocks and nest blocks with lower level into previous blocks
   for (let i = 1; i < blocksLength; ++i) {
