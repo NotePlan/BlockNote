@@ -565,3 +565,33 @@ a[data-wikilink] {
 
   text-decoration: none; /* optional: removes underline if your hashtags are also links */
 }
+
+/* SEPARATOR */
+[data-content-type="separator"] {
+  width: 100%;
+  margin: 0;
+  border: 0px;
+  height: 50%;
+  position: relative;
+}
+
+[data-content-type="separator"] > hr {
+  border: 0px;
+  height: 50%;
+  margin: 0;
+}
+
+[data-content-type="separator"] > hr::before {
+  content: "";
+  display: block;
+  position: absolute;
+  border-top: 2px solid rgb(215, 215, 215);
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  top: 50%;
+}
+
+[data-content-type="separator"].hasAnchor > hr::before {
+  border-top: 2px solid rgb(156, 192, 255);
+}

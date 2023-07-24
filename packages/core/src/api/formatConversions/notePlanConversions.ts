@@ -47,6 +47,7 @@ function createBlock(
 }
 
 function createInlineContent(text: string): PartialInlineContent[] {
+  const wikilinkRegex = /(\[{2}(.*?)\]{2})/;
   const fileLinkRegex = /!\[(file)\]\(([^()]+)\)/;
   const imageLinkRegex = /!\[(image)\]\(([^()]+)\)/;
   const namedLinkRegex = /\[([^[\]]*)\]\(([^()]+)\)/;
@@ -60,6 +61,10 @@ function createInlineContent(text: string): PartialInlineContent[] {
     /(?!@[\d!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~]+(\s|$))(@([^!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~\s]|[-_/])+?\\(.*?\\)|@([^!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~\s]|[-_/])+)/;
 
   let lexer = new Tokenizr();
+  // wiki link
+  lexer.rule(wikilinkRegex, (ctx, match) => {
+    ctx.accept("wiki-link", { name: match[1], link: match[2] });
+  });
   // file link
   lexer.rule(fileLinkRegex, (ctx, match) => {
     ctx.accept("file-link", match[2]);
@@ -113,7 +118,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
     ctx.accept("strike", match[1]);
   });
   // highlight
-  lexer.rule(/::(.*?)::/, (ctx, match) => {
+  lexer.rule(/==(.*?)==/, (ctx, match) => {
     ctx.accept("highlight", match[1]);
   });
   // plain text
@@ -220,14 +225,21 @@ function createInlineContent(text: string): PartialInlineContent[] {
         inlineContent.push({
           type: "text",
           text: token.value,
-          styles: { textColor: "hashtag-color" },
+          styles: { hashtag: true },
         });
         break;
       case "at-tag":
         inlineContent.push({
           type: "text",
           text: token.value,
-          styles: { textColor: "at-color" },
+          styles: { hashtag: true },
+        });
+        break;
+      case "wiki-link":
+        inlineContent.push({
+          type: "text",
+          text: token.value.name,
+          styles: { wikilink: true },
         });
         break;
     }
@@ -319,6 +331,14 @@ function parseHeader3(line: string): PartialBlock<DefaultBlockSchema> | null {
 
 function parseHeader4(line: string): PartialBlock<DefaultBlockSchema> | null {
   return parseHeader(line, /^#+\s+/, 4);
+}
+
+function parseSeparator(line: string): PartialBlock<DefaultBlockSchema> | null {
+  return parseIndentedBlock(
+    line,
+    /^\s*([-*]\s*){3,}$/,
+    "separator" as BlockType
+  );
 }
 
 function parseQuote(line: string): PartialBlock<DefaultBlockSchema> | null {
@@ -534,6 +554,7 @@ const parseFunctions = [
   parseHeader3,
   parseHeader4,
   parseQuote,
+  parseSeparator,
   parseToDoHyphen,
   parseToDoHyphenComplete,
   parseToDoHyphenCancelled,

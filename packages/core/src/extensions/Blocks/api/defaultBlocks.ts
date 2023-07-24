@@ -1,4 +1,5 @@
 import { HeadingBlockContent } from "../nodes/BlockContent/HeadingBlockContent/HeadingBlockContent";
+import { SeparatorBlockContent } from "../nodes/BlockContent/SeparatorBlockContent/SeparatorBlockContent";
 import { BulletListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/BulletListItemBlockContent/BulletListItemBlockContent";
 import { NumberedListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/NumberedListItemBlockContent/NumberedListItemBlockContent";
 import { QuotListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/QuoteListItemBlockContent/QuoteBlockContent";
@@ -54,6 +55,12 @@ export const defaultBlockSchema = {
       level: { default: "1", values: ["1", "2", "3"] as const },
     },
     node: HeadingBlockContent,
+  },
+  separator: {
+    propSchema: {
+      ...defaultProps,
+    },
+    node: SeparatorBlockContent,
   },
   bulletListItem: {
     propSchema: {
