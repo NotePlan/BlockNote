@@ -1,6 +1,7 @@
 import { InputRule, mergeAttributes } from "@tiptap/core";
 import { createTipTapBlock } from "../../../api/block";
 import styles from "../../Block.module.css";
+import { handleSelectAboveBelow } from "../ListItemBlockContent/ListItemKeyboardShortcuts";
 
 export const SeparatorBlockContent = createTipTapBlock<"separator">({
   name: "separator",
@@ -26,6 +27,13 @@ export const SeparatorBlockContent = createTipTapBlock<"separator">({
         },
       }),
     ];
+  },
+
+  addKeyboardShortcuts() {
+    return {
+      ArrowUp: () => handleSelectAboveBelow(this.editor, "above"),
+      ArrowDown: () => handleSelectAboveBelow(this.editor, "below"),
+    };
   },
 
   parseHTML() {

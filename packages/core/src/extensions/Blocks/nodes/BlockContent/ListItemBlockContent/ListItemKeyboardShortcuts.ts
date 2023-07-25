@@ -1,5 +1,6 @@
 import { Editor } from "@tiptap/core";
 import { getBlockInfoFromPos } from "../../../helpers/getBlockInfoFromPos";
+import { TextSelection } from "prosemirror-state";
 
 export const handleEnter = (editor: Editor) => {
   const { node, contentType } = getBlockInfoFromPos(
@@ -44,6 +45,49 @@ export const handleEnter = (editor: Editor) => {
         return false;
       }),
   ]);
+};
+
+export const handleSelectAboveBelow = (
+  editor: Editor,
+  direction: "above" | "below"
+) => {
+  const { selection } = editor.state;
+
+  const blockInfo = getBlockInfoFromPos(
+    editor.state.doc,
+    editor.state.selection.from
+  );
+
+  if (blockInfo?.contentType.name !== "separator") {
+    return false;
+  }
+
+  const $position = direction === "above" ? selection.$from : selection.$to;
+  let targetPos = null;
+
+  if (direction === "above") {
+    // For above, we need to get the node before the current one
+    if ($position.depth > 0) {
+      targetPos = $position.before($position.depth - 1);
+    }
+  } else {
+    // For below, we need to get the node after the current one
+    targetPos = $position.after($position.depth - 1);
+  }
+
+  // If no node is found, return false
+  if (targetPos === null) {
+    console.log("target pos is nul");
+    return false;
+  }
+
+  // Create a new selection around the node
+  const nodeSelection = TextSelection.create(editor.state.doc, targetPos);
+
+  // Apply the new selection
+  editor.view.dispatch(editor.state.tr.setSelection(nodeSelection));
+
+  return true;
 };
 
 export const handleAttribute = (
