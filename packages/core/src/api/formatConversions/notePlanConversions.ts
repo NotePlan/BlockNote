@@ -58,19 +58,19 @@ function createInlineContent(text: string): PartialInlineContent[] {
     /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
   const doneDateRegex =
     /@done\((([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1]))( ((0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]( ?[aApP][mM])?))?\)/;
-  const hashTagRegex =
-    /(?!#[\d!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~]+(\s|$))(#([^!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~\s]|[-_/])+?\\(.*?\\)|#([^!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~\s]|[-_/])+)/;
-  const atRegex =
-    /(?!@[\d!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~]+(\s|$))(@([^!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~\s]|[-_/])+?\\(.*?\\)|@([^!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~\s]|[-_/])+)/;
+  const hashTagRegex = /(?<=(^|\s))((#)[\w-_/]+)/;
+  // /(?!#[\d!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~]+(\s|$))(#([^!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~\s]|[-_/])+?\\(.*?\\)|#([^!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~\s]|[-_/])+)/;
+  const atRegex = /(?<=(^|\s))((@)[\w-_/]+)/;
+  // /(?!@[\d!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~]+(\s|$))(@([^!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~\s]|[-_/])+?\\(.*?\\)|@([^!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~\s]|[-_/])+)/;
 
   let lexer = new Tokenizr();
   // date link
   lexer.rule(dateLinkRegex, (ctx, match) => {
-    ctx.accept("date-link", { name: match[1], link: match[2] });
+    ctx.accept("date-link", { name: match[0], href: match[2] });
   });
   // wiki link
   lexer.rule(wikilinkRegex, (ctx, match) => {
-    ctx.accept("wiki-link", { name: match[1], link: match[2] });
+    ctx.accept("wiki-link", { name: match[2], href: match[2] });
   });
   // file link
   lexer.rule(fileLinkRegex, (ctx, match) => {
@@ -82,7 +82,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
   });
   // named link
   lexer.rule(namedLinkRegex, (ctx, match) => {
-    ctx.accept("named-link", { name: match[1], link: match[2] });
+    ctx.accept("named-link", { name: match[1], href: match[2] });
   });
   // link
   lexer.rule(linkRegex, (ctx, _match) => {
@@ -93,12 +93,12 @@ function createInlineContent(text: string): PartialInlineContent[] {
     ctx.accept("done-date");
   });
   // hash tag
-  lexer.rule(hashTagRegex, (ctx, _match) => {
-    ctx.accept("hash-tag");
+  lexer.rule(hashTagRegex, (ctx, match) => {
+    ctx.accept("hash-tag", { name: match[0], href: match[0] });
   });
   // at tag
-  lexer.rule(atRegex, (ctx, _match) => {
-    ctx.accept("at-tag");
+  lexer.rule(atRegex, (ctx, match) => {
+    ctx.accept("at-tag", { name: match[0], href: match[0] });
   });
   // code
   lexer.rule(/`(.*?)`/, (ctx, match) => {
@@ -231,29 +231,45 @@ function createInlineContent(text: string): PartialInlineContent[] {
       case "hash-tag":
         inlineContent.push({
           type: "text",
-          text: token.value,
+          text: token.value.name,
           styles: { hashtag: true },
+          attr: { href: token.value.href },
         });
         break;
       case "at-tag":
         inlineContent.push({
           type: "text",
-          text: token.value,
+          text: token.value.name,
           styles: { hashtag: true },
+          attr: { href: token.value.href },
         });
         break;
       case "wiki-link":
-        inlineContent.push({
-          type: "text",
-          text: token.value.name,
-          styles: { wikilink: true },
-        });
+        inlineContent.push(
+          {
+            type: "text",
+            text: "[[",
+            styles: {},
+          },
+          {
+            type: "text",
+            text: token.value.name,
+            styles: { wikilink: true },
+            attr: { href: token.value.href },
+          },
+          {
+            type: "text",
+            text: "]]",
+            styles: {},
+          }
+        );
         break;
       case "date-link":
         inlineContent.push({
           type: "text",
           text: token.value.name,
           styles: { datelink: true },
+          attr: { href: token.value.href },
         });
     }
   });
@@ -675,8 +691,10 @@ function serializeBlockContent(content: InlineContent[]): string {
           text += "*" + contentItem.text + "*";
         } else if (contentItem.styles.strike) {
           text += "~~" + contentItem.text + "~~";
-        } else if (contentItem.styles.backgroundColor === "highlight-color") {
-          text += "::" + contentItem.text + "::";
+        } else if (contentItem.styles.highlighted) {
+          text += "==" + contentItem.text + "==";
+        } else if (contentItem.styles.underlined) {
+          text += "~" + contentItem.text + "~";
         } else if (contentItem.styles.code) {
           text += "`" + contentItem.text + "`";
         } else {

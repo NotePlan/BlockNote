@@ -3,7 +3,6 @@ import { InlineParser } from "./inlineParser";
 
 export interface LinkOptions {
   HTMLAttributes: Record<string, any>;
-  href: string;
 }
 
 interface LinkMarkOptions {

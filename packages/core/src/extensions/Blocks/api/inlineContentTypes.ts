@@ -6,6 +6,8 @@ export type Styles = {
   code?: true;
   textColor?: string;
   backgroundColor?: string;
+  highlighted?: string;
+  underlined?: string;
   hashtag?: true;
   wikilink?: true;
   datelink?: true;
@@ -23,6 +25,7 @@ export type StyledText = {
   type: "text";
   text: string;
   styles: Styles;
+  attr?: {};
 };
 
 export type Link = {
