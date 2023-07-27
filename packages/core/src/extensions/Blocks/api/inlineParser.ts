@@ -6,12 +6,16 @@ import { Node } from "prosemirror-model";
 interface MarkOptions {
   markType: MarkType;
   regex: RegExp;
-  matchIndex: number;
+  attrsMap: { [attr: string]: number };
 }
 
 // Class to manage the key of a Mark.
 class MarkKey {
-  constructor(public from: number, public to: number, public href: string) {}
+  constructor(
+    public from: number,
+    public to: number,
+    public attrs: { [attr: string]: string | Boolean }
+  ) {}
 
   // Convert the MarkKey instance into a string representation.
   toString() {
@@ -23,12 +27,12 @@ class MarkKey {
 export class InlineParser {
   private markType: MarkType;
   private regex: RegExp;
-  private matchIndex: number;
+  private attrsMap: { [attr: string]: number };
 
-  constructor({ markType, regex, matchIndex = 0 }: MarkOptions) {
+  constructor({ markType, regex, attrsMap }: MarkOptions) {
     this.markType = markType;
     this.regex = regex;
-    this.matchIndex = matchIndex;
+    this.attrsMap = attrsMap;
   }
 
   // Extract the existing marks within the given range.
@@ -44,7 +48,7 @@ export class InlineParser {
       // If the node has the markType, create a MarkKey and add it to the map.
       node.marks.forEach((mark) => {
         if (mark.type === this.markType) {
-          const key = new MarkKey(pos, pos + node.nodeSize, mark.attrs.href);
+          const key = new MarkKey(pos, pos + node.nodeSize, mark.attrs);
           existingMarks.set(key.toString(), key);
         }
       });
@@ -63,32 +67,20 @@ export class InlineParser {
     let newMarks = new Map<string, MarkKey>();
 
     // Use the regex to find the new marks.
-    const addMarkKey = (from: number, to: number, matchGroup: string) => {
-      const attrs = {
-        [this.markType.name]: true,
-        href: matchGroup, // TODO: Add here an href only if defined in the constructor
-      };
-      const key = new MarkKey(from + 1, to + 1, attrs.href);
-      newMarks.set(key.toString(), key);
-    };
-
-    // Use the regex to find the new marks.
     let match;
     while ((match = this.regex.exec(lineText)) !== null) {
-      if (this.matchIndex === 0) {
-        const from = lineStart + match.index;
-        const to = from + match[0].length;
-        addMarkKey(from, to, match[0]);
-      } else {
-        let index = match.index;
-        for (let groupIndex = 1; groupIndex < match.length; groupIndex++) {
-          const from = lineStart + index;
+      let attrs: { [key: string]: string | Boolean } = {};
+
+      for (const [attrKey, groupIndex] of Object.entries(this.attrsMap)) {
+        if (match[groupIndex] !== undefined) {
+          attrs[attrKey] = match[groupIndex];
+
+          const from =
+            lineStart + match.index + match[0].indexOf(match[groupIndex]);
           const to = from + match[groupIndex].length;
-          if (groupIndex === this.matchIndex) {
-            addMarkKey(from, to, match[groupIndex]);
-          }
-          // Update the index to start after the current group
-          index = to - lineStart;
+
+          const key = new MarkKey(from + 1, to + 1, attrs);
+          newMarks.set(key.toString(), key);
         }
       }
     }
@@ -126,10 +118,7 @@ export class InlineParser {
           tr = tr.addMark(
             markKey.from,
             markKey.to,
-            this.markType.create({
-              [this.markType.name]: true,
-              href: markKey.href,
-            })
+            this.markType.create(markKey.attrs)
           );
         }
       }

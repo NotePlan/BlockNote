@@ -558,8 +558,16 @@ a[data-hashtag] {
   text-decoration: none; /* optional: removes underline if your hashtags are also links */
 }
 
-/* HASHTAG */
+/* WIKILINK */
 a[data-wikilink] {
+  color: var(--orange-noteplan);
+  cursor: pointer;
+
+  text-decoration: none; /* optional: removes underline if your hashtags are also links */
+}
+
+/* DATELINK */
+a[data-datelink] {
   color: var(--orange-noteplan);
   cursor: pointer;
 

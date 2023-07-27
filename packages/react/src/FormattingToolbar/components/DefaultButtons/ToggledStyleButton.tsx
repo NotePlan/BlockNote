@@ -20,6 +20,7 @@ const shortcuts: Record<ToggledStyle, string> = {
   code: "",
   hashtag: "",
   wikilink: "",
+  datelink: "",
 };
 
 const icons: Record<ToggledStyle, IconType> = {
@@ -30,6 +31,7 @@ const icons: Record<ToggledStyle, IconType> = {
   code: RiCodeFill,
   hashtag: RiHashtag,
   wikilink: RiLink,
+  datelink: RiLink,
 };
 
 export const ToggledStyleButton = <BSchema extends BlockSchema>(props: {
