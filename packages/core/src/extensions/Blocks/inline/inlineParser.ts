@@ -63,20 +63,34 @@ export class InlineParser {
     let newMarks = new Map<string, MarkKey>();
 
     // Use the regex to find the new marks.
-    let match;
-    while ((match = this.regex.exec(lineText)) !== null) {
-      // Calculate prefix length (full match length minus group length)
-      const prefixLength = match[0].length - match[this.matchIndex].length;
-
-      // Adjust `from` and `to` to only cover the group
-      const from = lineStart + match.index + 1 + prefixLength / 2; // Adjusted for prefix
-      const to = from + match[this.matchIndex].length; // match[1] is the content of the first group
+    const addMarkKey = (from: number, to: number, matchGroup: string) => {
       const attrs = {
         [this.markType.name]: true,
-        href: match[this.matchIndex],
+        href: matchGroup, // TODO: Add here an href only if defined in the constructor
       };
-      const key = new MarkKey(from, to, attrs.href);
+      const key = new MarkKey(from + 1, to + 1, attrs.href);
       newMarks.set(key.toString(), key);
+    };
+
+    // Use the regex to find the new marks.
+    let match;
+    while ((match = this.regex.exec(lineText)) !== null) {
+      if (this.matchIndex === 0) {
+        const from = lineStart + match.index;
+        const to = from + match[0].length;
+        addMarkKey(from, to, match[0]);
+      } else {
+        let index = match.index;
+        for (let groupIndex = 1; groupIndex < match.length; groupIndex++) {
+          const from = lineStart + index;
+          const to = from + match[groupIndex].length;
+          if (groupIndex === this.matchIndex) {
+            addMarkKey(from, to, match[groupIndex]);
+          }
+          // Update the index to start after the current group
+          index = to - lineStart;
+        }
+      }
     }
 
     return newMarks;

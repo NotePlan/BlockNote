@@ -6,7 +6,7 @@ export interface WikiLinkOptions {
   href: string;
 }
 
-export const wikiLinkRegex = /\[{2}(.*?)\]{2}/g;
+export const wikiLinkRegex = /(\[{2})(.*?)(\]{2})/g;
 
 export const WikiLink = Mark.create<WikiLinkOptions>({
   name: "wikilink",
@@ -69,7 +69,7 @@ export const WikiLink = Mark.create<WikiLinkOptions>({
       new InlineParser({
         markType: this.type,
         regex: wikiLinkRegex,
-        matchIndex: 1,
+        matchIndex: 2,
       }).plugin,
     ];
   },
