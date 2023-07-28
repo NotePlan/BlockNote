@@ -7,6 +7,7 @@ import { TaskListItemBlockContent } from "../nodes/BlockContent/ListItemBlockCon
 import { CheckListItemBlockContent } from "../nodes/BlockContent/ListItemBlockContent/TaskListItemBlockContent/CheckListItemBlockContent";
 import { ParagraphBlockContent } from "../nodes/BlockContent/ParagraphBlockContent/ParagraphBlockContent";
 import { PropSchema, TypesMatch } from "./blockTypes";
+import { TableBlockContent } from "../nodes/BlockContent/TableBlockContent/TableBlockContent";
 
 export const defaultProps = {
   backgroundColor: {
@@ -32,6 +33,12 @@ const taskAndCheckProps = {
   },
   scheduled: {
     default: "false" as const,
+  },
+} satisfies PropSchema;
+
+const tableProps = {
+  data: {
+    default: "" as const,
   },
 } satisfies PropSchema;
 
@@ -80,7 +87,6 @@ export const defaultBlockSchema = {
   checkListItem: {
     propSchema: {
       ...defaultProps,
-      ...levelProps,
       ...taskAndCheckProps,
     },
     node: CheckListItemBlockContent,
@@ -88,16 +94,21 @@ export const defaultBlockSchema = {
   quoteListItem: {
     propSchema: {
       ...defaultProps,
-      ...levelProps,
     },
     node: QuotListItemBlockContent,
   },
   numberedListItem: {
     propSchema: {
       ...defaultProps,
-      ...levelProps,
     },
     node: NumberedListItemBlockContent,
+  },
+  tableBlockItem: {
+    propSchema: {
+      ...defaultProps,
+      ...tableProps,
+    },
+    node: TableBlockContent,
   },
 } as const;
 

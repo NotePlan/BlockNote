@@ -3,20 +3,39 @@ import { createTipTapBlock } from "../../../api/block";
 import styles from "../../Block.module.css";
 import { handleSelectAboveBelow } from "../ListItemBlockContent/ListItemKeyboardShortcuts";
 
-export const SeparatorBlockContent = createTipTapBlock<"separator">({
-  name: "separator",
+export const TableBlockContent = createTipTapBlock<"tableBlockItem">({
+  name: "tableBlockItem",
   content: "inline*",
   selectable: true,
 
+  addAttributes() {
+    return {
+      data: {
+        default: [
+          ["", "", ""],
+          ["", "", ""],
+          ["", "", ""],
+        ],
+      },
+    };
+  },
+
   addInputRules() {
     return [
-      // Creates a heading of appropriate level when starting with "#", "##", or "###".
+      // Creates a table when typing "===".
       new InputRule({
-        find: new RegExp(/^\s*([-*]\s*){3,}$/),
-        handler: ({ state, chain, range }) => {
+        find: /^(={3,})\s$/,
+        handler: ({ state, match, chain, range }) => {
+          const matchLength = match[1].length;
+
           chain()
             .BNUpdateBlock(state.selection.from, {
               type: this.name,
+              props: {
+                data: Array.from({ length: matchLength }, () =>
+                  Array(matchLength).fill("")
+                ),
+              },
             })
             // Removes the "#" character(s) used to set the heading.
             .deleteRange({ from: range.from, to: range.to })
@@ -39,19 +58,33 @@ export const SeparatorBlockContent = createTipTapBlock<"separator">({
   parseHTML() {
     return [
       {
-        tag: "hr",
+        tag: "table",
       },
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ node, HTMLAttributes }) {
+    const tableData = node.attrs.data || [[]];
+    const tableRows = [];
+
+    // Generate the rows with td elements
+    for (let i = 0; i < tableData.length; i++) {
+      const cells = tableData[i];
+      const tableCells = cells.map((cell: string) => [
+        i === 0 ? "th" : "td",
+        { contenteditable: true },
+        cell,
+      ]);
+      tableRows.push(["tr", ...tableCells]);
+    }
+
     return [
       "div",
       mergeAttributes(HTMLAttributes, {
         class: styles.blockContent,
         "data-content-type": this.name,
       }),
-      ["hr", { contenteditable: false }, 0],
+      ["table", ...tableRows],
     ];
   },
 });

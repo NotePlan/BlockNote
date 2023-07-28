@@ -1,8 +1,3 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities;
-@tailwind colors; */
-
 :root {
   --blue-noteplan: #0091f8;
   --orange-noteplan: #d87001;
@@ -602,4 +597,60 @@ a[data-datelink] {
 
 [data-content-type="separator"].hasAnchor > hr::before {
   border-top: 2px solid rgb(156, 192, 255);
+}
+
+/* TABLE */
+
+[data-content-type="tableBlockItem"] {
+  border-width: 2px;
+  border-color: #e2e8f0;
+  border-style: solid;
+  text-align: left;
+  border-radius: 10px;
+}
+
+[data-content-type="tableBlockItem"] table {
+  line-height: 1.5;
+  font-size: 1rem;
+  background-color: transparent;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  overflow: hidden;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+[data-content-type="tableBlockItem"] table th,
+td {
+  border-width: 2px;
+  border-color: #e2e8f0;
+  border-style: solid;
+  padding: 0.5rem;
+  text-align: left;
+  outline: none;
+  vertical-align: top;
+}
+
+[data-content-type="tableBlockItem"].hasAnchor {
+  border-color: rgb(156, 192, 255);
+}
+
+[data-content-type="tableBlockItem"] tr th:first-child {
+  border-left: none;
+}
+[data-content-type="tableBlockItem"] tr th:last-child {
+  border-right: none;
+}
+[data-content-type="tableBlockItem"] tr:first-child th {
+  border-top: none;
+}
+[data-content-type="tableBlockItem"] tr:last-child td {
+  border-bottom: none;
+}
+[data-content-type="tableBlockItem"] tr td:first-child {
+  border-left: none;
+}
+[data-content-type="tableBlockItem"] tr td:last-child {
+  border-right: none;
 }

@@ -49,7 +49,8 @@ export const handleEnter = (editor: Editor) => {
 
 export const handleSelectAboveBelow = (
   editor: Editor,
-  direction: "above" | "below"
+  direction: "above" | "below",
+  contentType: string
 ) => {
   const { selection } = editor.state;
 
@@ -58,7 +59,7 @@ export const handleSelectAboveBelow = (
     editor.state.selection.from
   );
 
-  if (blockInfo?.contentType.name !== "separator") {
+  if (blockInfo?.contentType.name !== contentType) {
     return false;
   }
 

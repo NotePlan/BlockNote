@@ -12,6 +12,8 @@ import {
 import { DefaultBlockSchema } from "../..";
 import Tokenizr from "tokenizr";
 
+const encodedTablePrefix = "%%%npTableData:";
+
 // fallback polyfill for window.matchMedia
 window.matchMedia =
   window.matchMedia ||
@@ -370,6 +372,28 @@ function parseSeparator(line: string): PartialBlock<DefaultBlockSchema> | null {
   );
 }
 
+function parseTable(line: string): PartialBlock<DefaultBlockSchema> | null {
+  // Check if the line starts with %%%npTableData:
+  if (!line.startsWith(encodedTablePrefix)) {
+    return null;
+  }
+
+  // Remove the %%%npTableData: from the beginning
+  line = line.substring(encodedTablePrefix.length);
+
+  // Convert the line which is a JSON string into an object, the JSON might be invalid, check for it
+  let tableData: [];
+  try {
+    tableData = JSON.parse(line);
+  } catch (e) {
+    return null;
+  }
+
+  return createBlock("tableBlockItem" as BlockType, "", {
+    data: tableData,
+  });
+}
+
 function parseQuote(line: string): PartialBlock<DefaultBlockSchema> | null {
   return parseIndentedBlock(line, /^(\s*?)>\s+/, "quoteListItem" as BlockType);
 }
@@ -578,6 +602,7 @@ function parseUnorderedList(
 }
 
 const parseFunctions = [
+  parseTable,
   parseHeader1,
   parseHeader2,
   parseHeader3,
@@ -601,11 +626,50 @@ const parseFunctions = [
   parseParagraph,
 ];
 
+// Converts the multi-line table into a one-liner, so we can pick it up in the line-by-line processing
+function preParseTablesIntoSingleLines(markdown: string): string {
+  const tableRegex = /\|(.+)\|\n\|( *[-:]+[-| :]*)+\|\n((\|.*\|\n)+)/gm;
+  let match;
+
+  while ((match = tableRegex.exec(markdown)) !== null) {
+    const rows = match[0].trim().split("\n");
+    const headerCells = rows[0]
+      .split("|")
+      .map((cell) => cell.trim())
+      .slice(1, -1);
+    const numColumns = headerCells.length;
+
+    const tableRows = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      const cells = rows[i]
+        .split("|")
+        .map((cell) => cell.trim())
+        .slice(1, -1);
+      if (cells.length !== numColumns) {
+        throw new Error(
+          `Row ${i} has ${cells.length} cells, expected ${numColumns}`
+        );
+      }
+      const pattern = /^-+$/;
+      if (cells.some((cell) => !pattern.test(cell))) {
+        tableRows.push(cells);
+      }
+    }
+
+    const tableData = [headerCells, ...tableRows];
+    const encodedTableData = encodedTablePrefix + JSON.stringify(tableData);
+
+    markdown = markdown.replace(match[0], encodedTableData);
+  }
+
+  return markdown;
+}
+
 function parseNoteLine(line: string): PartialBlock<DefaultBlockSchema> {
   let parseFunctionsLength = parseFunctions.length;
 
   for (let i = 0; i < parseFunctionsLength; ++i) {
-    //TODO handle lines with separator
     let block = parseFunctions[i](line);
 
     if (block != null) {
@@ -655,9 +719,15 @@ function postProcessBlocks(blocks: PartialBlock<BlockSchema>[]): void {
 export function parseNoteToBlocks(
   note: string
 ): PartialBlock<DefaultBlockSchema>[] {
+  // Parse first the multi-line blocks like code-fences and tables into a single line, so we can process it later line by line
+  note = preParseTablesIntoSingleLines(note);
+
+  // TODO: Code fences
+
   let lines = note.split(/\r?\n/);
   const linesCount = lines.length;
   let blocks = [];
+
   for (let i = 0; i < linesCount; i++) {
     blocks.push(parseNoteLine(lines[i]));
   }

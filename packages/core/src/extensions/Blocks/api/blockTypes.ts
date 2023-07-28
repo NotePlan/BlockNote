@@ -34,8 +34,8 @@ export type TipTapNode<
 // Defines a single prop spec, which includes the default value the prop should
 // take and possible values it can take.
 export type PropSpec = {
-  values?: readonly string[];
-  default: string;
+  values?: readonly any[];
+  default: any;
 };
 
 // Defines multiple block prop specs. The key of each prop is the name of the
@@ -49,9 +49,9 @@ export type PropSchema = Record<string, PropSpec>;
 // each prop spec into a union type of its possible values, or a string if no
 // values are specified.
 export type Props<PSchema extends PropSchema> = {
-  [PType in keyof PSchema]: PSchema[PType]["values"] extends readonly string[]
+  [PType in keyof PSchema]: PSchema[PType]["values"] extends readonly any[]
     ? PSchema[PType]["values"][number]
-    : string;
+    : any;
 };
 
 // Defines the config for a single block. Meant to be used as an argument to
