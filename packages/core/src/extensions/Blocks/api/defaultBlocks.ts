@@ -26,13 +26,13 @@ export type DefaultProps = typeof defaultProps;
 
 const taskAndCheckProps = {
   checked: {
-    default: "false" as const,
+    default: false,
   },
   cancelled: {
-    default: "false" as const,
+    default: false,
   },
   scheduled: {
-    default: "false" as const,
+    default: false,
   },
 } satisfies PropSchema;
 

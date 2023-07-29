@@ -20,9 +20,9 @@ export const CheckListItemBlockContent = createTipTapBlock<"checkListItem">({
             .BNUpdateBlock(state.selection.from, {
               type: this.name,
               props: {
-                checked: "false",
-                canceled: "false",
-                scheduled: "false",
+                checked: false,
+                canceled: false,
+                scheduled: false,
               },
             })
             // Removes the "*" character used to set the list.

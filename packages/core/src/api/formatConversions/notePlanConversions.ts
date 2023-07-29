@@ -736,15 +736,42 @@ export function parseNoteToBlocks(
 }
 
 function serializeTaskStates(prop: Props<PropSchema>): string {
-  if (prop.checked === "true") {
-    return "[x]";
-  } else if (prop.cancelled === "true") {
-    return "[-]";
-  } else if (prop.scheduled === "true") {
-    return "[>]";
+  if (prop.checked === true) {
+    return " [x]";
+  } else if (prop.cancelled === true) {
+    return " [-]";
+  } else if (prop.scheduled === true) {
+    return " [>]";
   } else {
-    return "[ ]";
+    return ""; // alternative: "[ ]", however, in NotePlan this is valid markdown without
   }
+}
+// Create a markdown table from the data arryay. The first row is the header and the second should be a line like | --- | --- | --- |
+function serializeTableData(data: any[]): string {
+  let table = "";
+  const dataLength = data.length;
+  for (let i = 0; i < dataLength; ++i) {
+    let row = data[i];
+    const rowLength = row.length;
+    for (let j = 0; j < rowLength; ++j) {
+      table += "|" + row[j];
+    }
+    table += "|\n";
+    if (i === 0) {
+      for (let j = 0; j < rowLength; ++j) {
+        table += "|";
+        if (row[j].length === 0) {
+          table += "-";
+        } else {
+          for (let k = 0; k < row[j].length; ++k) {
+            table += "-";
+          }
+        }
+      }
+      table += "|\n";
+    }
+  }
+  return table;
 }
 
 function serializeBlockContent(content: InlineContent[]): string {
@@ -808,10 +835,16 @@ export function serializeBlock(
       text += "1. ";
       break;
     case "taskListItem":
-      text += "* " + serializeTaskStates(block.props || {}) + " ";
+      text += "*" + serializeTaskStates(block.props || {}) + " ";
       break;
     case "checkListItem":
-      text += "+ " + serializeTaskStates(block.props || {}) + " ";
+      text += "+" + serializeTaskStates(block.props || {}) + " ";
+      break;
+    case "tableBlockItem":
+      text += serializeTableData(block.props?.data || []);
+      break;
+    case "separator":
+      text += "---";
       break;
     case "paragraph":
       break;
