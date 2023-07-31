@@ -17,6 +17,7 @@ const shortcuts: Record<ToggledStyle, string> = {
   italic: "Mod+I",
   underlined: "Mod+U",
   strikethrough: "Mod+Shift+X",
+  highlighted: "Mod+Shift+H",
   code: "",
   hashtag: "",
   wikilink: "",
