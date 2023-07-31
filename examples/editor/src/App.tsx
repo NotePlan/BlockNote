@@ -45,7 +45,9 @@ function App() {
       class: styles.editor,
       "data-test": "editor",
     },
-    theme: "light",
+    theme: window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light",
   });
 
   useEffect(() => {

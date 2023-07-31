@@ -603,7 +603,7 @@ a[data-datelink] {
 
 [data-content-type="tableBlockItem"] {
   border-width: 1.5px;
-  border-color: #e2e8f0;
+  border-color: #8e8e8e44;
   border-style: solid;
   text-align: left;
   border-radius: 10px;
@@ -624,7 +624,7 @@ a[data-datelink] {
 [data-content-type="tableBlockItem"] table th,
 td {
   border-width: 1.5px;
-  border-color: #e2e8f0;
+  border-color: #8e8e8e44;
   border-style: solid;
   padding: 0.5rem;
   text-align: left;
