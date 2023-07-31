@@ -29,6 +29,7 @@ const toggleStyles = new Set<ToggledStyle>([
   "hashtag",
   "wikilink",
   "inlineImage",
+  "inlineFile",
   "datelink",
   "highlighted",
 ]);

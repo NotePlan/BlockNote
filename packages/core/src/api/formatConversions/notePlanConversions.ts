@@ -208,10 +208,13 @@ function createInlineContent(text: string): PartialInlineContent[] {
         });
         break;
       case "file-link":
+        let hrefParts = token.value.split("/");
+
         inlineContent.push({
-          type: "link",
-          href: token.value,
-          content: "file",
+          type: "text",
+          text: hrefParts[hrefParts.length - 1],
+          styles: { inlineFile: true },
+          attr: { href: token.value },
         });
         break;
       case "image-link":
@@ -628,7 +631,6 @@ const parseFunctions = [
   parseHeader4,
   parseQuote,
   parseSeparator,
-  // parseImage,
   parseToDoHyphen,
   parseToDoHyphenComplete,
   parseToDoHyphenCancelled,
@@ -814,6 +816,12 @@ function serializeBlockContent(content: InlineContent[]): string {
           text += "~" + contentItem.text + "~";
         } else if (contentItem.styles.code) {
           text += "`" + contentItem.text + "`";
+        } else if (contentItem.styles.inlineFile) {
+          // TODO: We have to add the attributes from the inline element somehow
+          // text += "![file](" + contentItem.attr?.href + ")";
+        } else if (contentItem.styles.inlineImage) {
+          // TODO: We have to add the attributes from the inline element somehow
+          // text += "![image](" + contentItem.attr?.src + ")";
         } else {
           text += contentItem.text;
         }

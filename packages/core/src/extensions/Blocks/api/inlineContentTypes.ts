@@ -3,6 +3,7 @@ export type Styles = {
   italic?: true;
   strikethrough?: true;
   inlineImage?: true;
+  inlineFile?: true;
   code?: true;
   textColor?: string;
   backgroundColor?: string;

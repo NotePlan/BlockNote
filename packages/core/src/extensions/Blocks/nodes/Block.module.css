@@ -684,3 +684,46 @@ u {
     text-decoration-color: #ccccc6;
   }
 }
+
+/* ATTACHMENTS */
+[data-content-type="inlineFile"] {
+  display: inline-block;
+}
+
+/* .note-attachment-disabled {
+  @apply text-gray-700 dark:text-gray-300;
+} */
+
+/* .note-attachment-disabled i {
+  display: none;
+} */
+
+[data-content-type="inlineFile"] a i {
+  opacity: 0.7;
+  color: #0091f8;
+}
+
+[data-content-type="inlineFile"] a {
+  color: var(--orange-noteplan);
+  text-decoration: none;
+}
+
+[data-content-type="inlineFile"] a span {
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  padding-right: 0.25rem;
+  padding-left: 0.25rem;
+  margin-left: 0.25rem;
+}
+
+/* [data-content-type="inlineFile"] a span.hasAnchor {
+  border-color: rgb(156, 192, 255);
+} */
+
+@media (prefers-color-scheme: dark) {
+  [data-content-type="inlineFile"] a span {
+    border-color: rgb(255, 255, 255, 0.2);
+  }
+}
