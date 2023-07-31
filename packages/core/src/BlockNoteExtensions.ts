@@ -2,6 +2,7 @@ import { Extensions, extensions } from "@tiptap/core";
 
 import { BlockNoteEditor } from "./BlockNoteEditor";
 
+import { InlineImage } from "./extensions/Blocks/inline/inlineImage";
 import { Strikethrough } from "./extensions/Blocks/inline/strikethrough";
 import { Highlighted } from "./extensions/Blocks/inline/highlighted";
 import { Bold } from "@tiptap/extension-bold";
@@ -98,6 +99,7 @@ export const getBlockNoteExtensions = <BSchema extends BlockSchema>(opts: {
     Text,
 
     // marks:
+    InlineImage,
     Bold,
     Highlighted,
     Strikethrough,

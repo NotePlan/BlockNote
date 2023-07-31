@@ -6,7 +6,7 @@ export const Hashtag = createLinkMark({
   dataAttr: "data-hashtag",
   hrefPrefix: undefined,
   attrsMap: {
-    wikilink: 0,
+    hashtag: 0,
     href: 0,
   },
 });

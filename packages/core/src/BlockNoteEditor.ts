@@ -536,7 +536,7 @@ export class BlockNoteEditor<BSchema extends BlockSchema = DefaultBlockSchema> {
     const toggleStyles = new Set<ToggledStyle>([
       "bold",
       "italic",
-      "underline",
+      "underlined",
       "strikethrough",
       "highlighted",
       "code",
@@ -562,7 +562,7 @@ export class BlockNoteEditor<BSchema extends BlockSchema = DefaultBlockSchema> {
     const toggleStyles = new Set<ToggledStyle>([
       "bold",
       "italic",
-      "underline",
+      "underlined",
       "strikethrough",
       "highlighted",
       "code",
@@ -600,7 +600,7 @@ export class BlockNoteEditor<BSchema extends BlockSchema = DefaultBlockSchema> {
     const toggleStyles = new Set<ToggledStyle>([
       "bold",
       "italic",
-      "underline",
+      "underlined",
       "strikethrough",
       "highlighted",
       "code",

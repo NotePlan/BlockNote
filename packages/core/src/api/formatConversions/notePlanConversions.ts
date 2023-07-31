@@ -216,9 +216,10 @@ function createInlineContent(text: string): PartialInlineContent[] {
         break;
       case "image-link":
         inlineContent.push({
-          type: "link",
-          href: token.value,
-          content: "image",
+          type: "text",
+          text: "image",
+          styles: { inlineImage: true },
+          attr: { src: token.value },
         });
         break;
       case "link":
@@ -229,9 +230,10 @@ function createInlineContent(text: string): PartialInlineContent[] {
         });
         break;
       case "named-link":
+        console.log("it's a named link " + token.value);
         inlineContent.push({
           type: "link",
-          href: token.value.link,
+          href: token.value.href,
           content: token.value.name,
         });
         break;
@@ -423,12 +425,17 @@ function parseListWithIcon(
   }
 
   let substring = line.substring(matches[0].length);
+  // First replace 4 whitespaces with tabs and then remove anything that's not a tab
+  let leadingWhitespace = matches[1]
+    .replace(/ {4}/g, "\t")
+    .replace(/[^\t ]/g, "");
 
-  let leadingWhitespace = matches[1].length;
-  let level = 0;
-  if (leadingWhitespace > 1) {
-    level = Math.floor(leadingWhitespace / 2);
-  }
+  // Count the number of tabs in the leadingWhitespace string.
+  let tabsCount = leadingWhitespace
+    ? leadingWhitespace.split("\t").length - 1
+    : 0;
+
+  let level = tabsCount;
 
   let block = createBlock(type, substring, {
     ...props,
@@ -621,6 +628,7 @@ const parseFunctions = [
   parseHeader4,
   parseQuote,
   parseSeparator,
+  // parseImage,
   parseToDoHyphen,
   parseToDoHyphenComplete,
   parseToDoHyphenCancelled,

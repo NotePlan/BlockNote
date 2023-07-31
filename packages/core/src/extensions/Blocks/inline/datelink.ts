@@ -7,7 +7,7 @@ export const DateLink = createLinkMark({
   dataAttr: "data-datelink",
   hrefPrefix: "date",
   attrsMap: {
-    wikilink: 0,
+    datelink: 0,
     href: 1,
   },
 });

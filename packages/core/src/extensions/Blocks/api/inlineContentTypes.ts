@@ -1,8 +1,8 @@
 export type Styles = {
   bold?: true;
   italic?: true;
-  underline?: true;
   strikethrough?: true;
+  inlineImage?: true;
   code?: true;
   textColor?: string;
   backgroundColor?: string;
