@@ -2,6 +2,8 @@ import { Extensions, extensions } from "@tiptap/core";
 
 import { BlockNoteEditor } from "./BlockNoteEditor";
 
+import { Strikethrough } from "./extensions/Blocks/inline/strikethrough";
+import { Highlighted } from "./extensions/Blocks/inline/highlighted";
 import { Bold } from "@tiptap/extension-bold";
 import { Code } from "@tiptap/extension-code";
 import { Hashtag } from "./extensions/Blocks/inline/hashtags";
@@ -15,9 +17,8 @@ import { HardBreak } from "@tiptap/extension-hard-break";
 import { History } from "@tiptap/extension-history";
 import { Italic } from "@tiptap/extension-italic";
 import { Link } from "@tiptap/extension-link";
-import { Strike } from "@tiptap/extension-strike";
 import { Text } from "@tiptap/extension-text";
-import { Underline } from "@tiptap/extension-underline";
+import { Underlined } from "./extensions/Blocks/inline/underlined";
 import * as Y from "yjs";
 import styles from "./editor.module.css";
 import { BackgroundColorExtension } from "./extensions/BackgroundColor/BackgroundColorExtension";
@@ -98,10 +99,11 @@ export const getBlockNoteExtensions = <BSchema extends BlockSchema>(opts: {
 
     // marks:
     Bold,
+    Highlighted,
+    Strikethrough,
     Code,
     Italic,
-    Strike,
-    Underline,
+    Underlined,
     Hashtag,
     WikiLink,
     DateLink,

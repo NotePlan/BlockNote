@@ -15,8 +15,8 @@ import { IconType } from "react-icons";
 const shortcuts: Record<ToggledStyle, string> = {
   bold: "Mod+B",
   italic: "Mod+I",
-  underline: "Mod+U",
-  strike: "Mod+Shift+X",
+  underlined: "Mod+U",
+  strikethrough: "Mod+Shift+X",
   code: "",
   hashtag: "",
   wikilink: "",
@@ -26,8 +26,9 @@ const shortcuts: Record<ToggledStyle, string> = {
 const icons: Record<ToggledStyle, IconType> = {
   bold: RiBold,
   italic: RiItalic,
-  underline: RiUnderline,
-  strike: RiStrikethrough,
+  underlined: RiUnderline,
+  strikethrough: RiStrikethrough,
+  highlighted: RiCodeFill,
   code: RiCodeFill,
   hashtag: RiHashtag,
   wikilink: RiLink,

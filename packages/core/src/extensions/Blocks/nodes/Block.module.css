@@ -654,3 +654,33 @@ td {
 [data-content-type="tableBlockItem"] tr td:last-child {
   border-right: none;
 }
+
+/* HIGHLIGHTED */
+
+.blockContent mark {
+  background-color: #84ff0066;
+  border-radius: 6px;
+  padding: 1px 3px;
+}
+
+del {
+  opacity: 0.8;
+  text-decoration: line-through;
+  text-decoration-color: #333333;
+}
+
+u {
+  text-decoration: underline;
+  text-decoration-color: #ffcc66;
+  text-decoration-thickness: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  mark {
+    background-color: #5ccfe677;
+  }
+
+  del {
+    text-decoration-color: #ccccc6;
+  }
+}

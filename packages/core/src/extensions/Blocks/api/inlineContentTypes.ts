@@ -2,12 +2,12 @@ export type Styles = {
   bold?: true;
   italic?: true;
   underline?: true;
-  strike?: true;
+  strikethrough?: true;
   code?: true;
   textColor?: string;
   backgroundColor?: string;
-  highlighted?: string;
-  underlined?: string;
+  highlighted?: true;
+  underlined?: true;
   hashtag?: true;
   wikilink?: true;
   datelink?: true;

@@ -537,7 +537,8 @@ export class BlockNoteEditor<BSchema extends BlockSchema = DefaultBlockSchema> {
       "bold",
       "italic",
       "underline",
-      "strike",
+      "strikethrough",
+      "highlighted",
       "code",
     ]);
     const colorStyles = new Set<ColorStyle>(["textColor", "backgroundColor"]);
@@ -562,7 +563,8 @@ export class BlockNoteEditor<BSchema extends BlockSchema = DefaultBlockSchema> {
       "bold",
       "italic",
       "underline",
-      "strike",
+      "strikethrough",
+      "highlighted",
       "code",
     ]);
     const colorStyles = new Set<ColorStyle>(["textColor", "backgroundColor"]);
@@ -599,7 +601,8 @@ export class BlockNoteEditor<BSchema extends BlockSchema = DefaultBlockSchema> {
       "bold",
       "italic",
       "underline",
-      "strike",
+      "strikethrough",
+      "highlighted",
       "code",
     ]);
     const colorStyles = new Set<ColorStyle>(["textColor", "backgroundColor"]);

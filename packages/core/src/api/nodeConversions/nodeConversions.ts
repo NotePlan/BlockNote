@@ -23,12 +23,13 @@ import { UnreachableCaseError } from "../../shared/utils";
 const toggleStyles = new Set<ToggledStyle>([
   "bold",
   "italic",
-  "underline",
-  "strike",
+  "underlined",
+  "strikethrough",
   "code",
   "hashtag",
   "wikilink",
   "datelink",
+  "highlighted",
 ]);
 const colorStyles = new Set<ColorStyle>(["textColor", "backgroundColor"]);
 

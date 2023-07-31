@@ -124,11 +124,16 @@ function createInlineContent(text: string): PartialInlineContent[] {
   });
   // strikethrough
   lexer.rule(/~~(.*?)~~/, (ctx, match) => {
-    ctx.accept("strike", match[1]);
+    ctx.accept("strikethrough", match[1]);
   });
+  // underlined
+  lexer.rule(/~(.*?)~/, (ctx, match) => {
+    ctx.accept("underlined", match[1]);
+  });
+
   // highlight
   lexer.rule(/==(.*?)==/, (ctx, match) => {
-    ctx.accept("highlight", match[1]);
+    ctx.accept("highlighted", match[1]);
   });
   // plain text
   let plaintext = "";
@@ -174,18 +179,25 @@ function createInlineContent(text: string): PartialInlineContent[] {
           styles: { italic: true },
         });
         break;
-      case "strike":
+      case "strikethrough":
         inlineContent.push({
           type: "text",
           text: token.value,
-          styles: { strike: true },
+          styles: { strikethrough: true },
         });
         break;
-      case "highlight":
+      case "underlined":
         inlineContent.push({
           type: "text",
           text: token.value,
-          styles: { backgroundColor: "highlight-color" },
+          styles: { underlined: true },
+        });
+        break;
+      case "highlighted":
+        inlineContent.push({
+          type: "text",
+          text: token.value,
+          styles: { highlighted: true },
         });
         break;
       case "code":
@@ -786,7 +798,7 @@ function serializeBlockContent(content: InlineContent[]): string {
           text += "**" + contentItem.text + "**";
         } else if (contentItem.styles.italic) {
           text += "*" + contentItem.text + "*";
-        } else if (contentItem.styles.strike) {
+        } else if (contentItem.styles.strikethrough) {
           text += "~~" + contentItem.text + "~~";
         } else if (contentItem.styles.highlighted) {
           text += "==" + contentItem.text + "==";
