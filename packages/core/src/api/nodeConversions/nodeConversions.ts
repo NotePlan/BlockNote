@@ -8,6 +8,7 @@ import {
 
 import { defaultProps } from "../../extensions/Blocks/api/defaultBlocks";
 import {
+  ContentAttributes,
   ColorStyle,
   InlineContent,
   PartialInlineContent,
@@ -43,7 +44,7 @@ function styledTextToNodes(styledText: StyledText, schema: Schema): Node[] {
   const marks: Mark[] = [];
   for (const [style, value] of Object.entries(styledText.styles)) {
     if (toggleStyles.has(style as ToggledStyle)) {
-      marks.push(schema.mark(style, styledText.attr));
+      marks.push(schema.mark(style, styledText.attrs));
     } else if (colorStyles.has(style as ColorStyle)) {
       marks.push(schema.mark(style, { color: value }));
     }
@@ -108,6 +109,7 @@ function styledTextArrayToNodes(
   for (const styledText of content) {
     nodes.push(...styledTextToNodes(styledText, schema));
   }
+
   return nodes;
 }
 
@@ -212,6 +214,7 @@ function contentNodeToInlineContent(contentNode: Node) {
         currentContent = {
           type: "text",
           text: "\n",
+          attrs: {},
           styles: {},
         };
       }
@@ -220,6 +223,7 @@ function contentNodeToInlineContent(contentNode: Node) {
     }
 
     const styles: Styles = {};
+    let attrs: ContentAttributes = {};
     let linkMark: Mark | undefined;
 
     for (const mark of node.marks) {
@@ -227,8 +231,10 @@ function contentNodeToInlineContent(contentNode: Node) {
         linkMark = mark;
       } else if (toggleStyles.has(mark.type.name as ToggledStyle)) {
         styles[mark.type.name as ToggledStyle] = true;
+        attrs = mark.attrs;
       } else if (colorStyles.has(mark.type.name as ColorStyle)) {
         styles[mark.type.name as ColorStyle] = mark.attrs.color;
+        attrs = mark.attrs;
       } else {
         throw Error("Mark is of an unrecognized type: " + mark.type.name);
       }
@@ -253,6 +259,7 @@ function contentNodeToInlineContent(contentNode: Node) {
               type: "text",
               text: node.textContent,
               styles,
+              attrs,
             };
           }
         } else {
@@ -266,6 +273,7 @@ function contentNodeToInlineContent(contentNode: Node) {
                 type: "text",
                 text: node.textContent,
                 styles,
+                attrs,
               },
             ],
           };
@@ -290,6 +298,7 @@ function contentNodeToInlineContent(contentNode: Node) {
                 type: "text",
                 text: node.textContent,
                 styles,
+                attrs,
               });
             }
           } else {
@@ -303,6 +312,7 @@ function contentNodeToInlineContent(contentNode: Node) {
                   type: "text",
                   text: node.textContent,
                   styles,
+                  attrs,
                 },
               ],
             };
@@ -314,6 +324,7 @@ function contentNodeToInlineContent(contentNode: Node) {
             type: "text",
             text: node.textContent,
             styles,
+            attrs,
           };
         }
       }
@@ -326,6 +337,7 @@ function contentNodeToInlineContent(contentNode: Node) {
           type: "text",
           text: node.textContent,
           styles,
+          attrs,
         };
       }
       // Node is a link.
@@ -338,6 +350,7 @@ function contentNodeToInlineContent(contentNode: Node) {
               type: "text",
               text: node.textContent,
               styles,
+              attrs,
             },
           ],
         };

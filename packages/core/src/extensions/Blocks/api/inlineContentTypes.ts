@@ -14,6 +14,11 @@ export type Styles = {
   datelink?: true;
 };
 
+export type ContentAttributes = {
+  src?: string;
+  href?: string;
+};
+
 export type ToggledStyle = {
   [K in keyof Styles]-?: Required<Styles>[K] extends true ? K : never;
 }[keyof Styles];
@@ -26,7 +31,7 @@ export type StyledText = {
   type: "text";
   text: string;
   styles: Styles;
-  attr?: {};
+  attrs?: ContentAttributes;
 };
 
 export type Link = {

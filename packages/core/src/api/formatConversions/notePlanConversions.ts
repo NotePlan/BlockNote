@@ -214,7 +214,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
           type: "text",
           text: hrefParts[hrefParts.length - 1],
           styles: { inlineFile: true },
-          attr: { href: token.value },
+          attrs: { href: token.value },
         });
         break;
       case "image-link":
@@ -222,7 +222,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
           type: "text",
           text: "image",
           styles: { inlineImage: true },
-          attr: { src: token.value },
+          attrs: { src: token.value },
         });
         break;
       case "link":
@@ -252,7 +252,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
           type: "text",
           text: token.value.name,
           styles: { hashtag: true },
-          attr: { href: token.value.href },
+          attrs: { href: token.value.href },
         });
         break;
       case "at-tag":
@@ -260,7 +260,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
           type: "text",
           text: token.value.name,
           styles: { hashtag: true },
-          attr: { href: token.value.href },
+          attrs: { href: token.value.href },
         });
         break;
       case "wiki-link":
@@ -274,7 +274,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
             type: "text",
             text: token.value.name,
             styles: { wikilink: true },
-            attr: { href: token.value.href },
+            attrs: { href: token.value.href },
           },
           {
             type: "text",
@@ -288,7 +288,7 @@ function createInlineContent(text: string): PartialInlineContent[] {
           type: "text",
           text: token.value.name,
           styles: { datelink: true },
-          attr: { href: token.value.href },
+          attrs: { href: token.value.href },
         });
     }
   });
@@ -331,13 +331,6 @@ function parseIndentedBlock(
 
   let substring = line.substring(matches[0].length);
   let block = createBlock(type, substring);
-
-  // TODO how to handle indeted quote blocks?
-  // let leadingWhitespace = matches[1].length;
-  // let div = document.createElement(outterType);
-  // if (leadingWhitespace > 0) {
-  //   div.style.marginLeft = (leadingWhitespace * 36).toString() + "px";
-  // }
 
   return block;
 }
@@ -817,26 +810,16 @@ function serializeBlockContent(content: InlineContent[]): string {
         } else if (contentItem.styles.code) {
           text += "`" + contentItem.text + "`";
         } else if (contentItem.styles.inlineFile) {
-          // TODO: We have to add the attributes from the inline element somehow
-          // text += "![file](" + contentItem.attr?.href + ")";
+          text += "![file](" + contentItem.attrs?.href + ")";
         } else if (contentItem.styles.inlineImage) {
-          // TODO: We have to add the attributes from the inline element somehow
-          // text += "![image](" + contentItem.attr?.src + ")";
+          text += "![image](" + contentItem.attrs?.src + ")";
         } else {
           text += contentItem.text;
         }
         break;
       case "link":
         const linkContent = serializeBlockContent(contentItem.content);
-        switch (linkContent) {
-          case "file":
-          case "image":
-            text += "![" + linkContent + "](" + contentItem.href + ")";
-            break;
-          default:
-            text += "[" + linkContent + "](" + contentItem.href + ")";
-            break;
-        }
+        text += "[" + linkContent + "](" + contentItem.href + ")";
         break;
     }
   }
