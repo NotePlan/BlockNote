@@ -11,6 +11,11 @@ export const handleEnter = (editor: Editor) => {
   const selectionEmpty =
     editor.state.selection.anchor === editor.state.selection.head;
 
+  if (contentType.name === "codefence") {
+    editor.commands.insertContent("\n");
+    return true;
+  }
+
   if (!contentType.name.endsWith("ListItem") || !selectionEmpty) {
     return false;
   }

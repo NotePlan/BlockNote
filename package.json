@@ -38,6 +38,9 @@
     "prosemirror-model": "1.18.3"
   },
   "dependencies": {
+    "@tiptap/extension-code-block-lowlight": "^2.0.4",
+    "highlight.js": "^11.8.0",
+    "lowlight": "^2.9.0",
     "tokenizr": "^1.6.10"
   }
 }

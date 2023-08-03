@@ -857,12 +857,19 @@ export function serializeBlock(
     case "separator":
       text += "---";
       break;
+    case "codefence":
+      text += "```" + block.props?.language + "\n";
+      break;
     case "paragraph":
       break;
   }
 
   // serialize content array with InlineContent
   text += serializeBlockContent(block.content);
+
+  if (block.type === "codefence") {
+    text += "\n```\n";
+  }
 
   // end block with newline
   text += "\n";
