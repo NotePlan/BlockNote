@@ -70,10 +70,7 @@ export function SlashMenuItem(props: SlashMenuItemProps) {
       }>
       <Stack>
         {/*Might need separate classes.*/}
-        <Text size={14} weight={500}>
-          {props.name}
-        </Text>
-        <Text size={10}>{props.hint}</Text>
+        <Text title={props.hint}>{props.name}</Text>
       </Stack>
     </Menu.Item>
   );

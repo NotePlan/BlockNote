@@ -1,17 +1,19 @@
 export type Styles = {
-  bold?: true;
-  italic?: true;
-  strikethrough?: true;
-  inlineImage?: true;
-  inlineFile?: true;
-  code?: true;
+  task?: boolean;
+  checkbox?: boolean;
+  bold?: boolean;
+  italic?: boolean;
+  strikethrough?: boolean;
+  inlineImage?: boolean;
+  inlineFile?: boolean;
+  code?: boolean;
   textColor?: string;
   backgroundColor?: string;
-  highlighted?: true;
-  underlined?: true;
-  hashtag?: true;
-  wikilink?: true;
-  datelink?: true;
+  highlighted?: boolean;
+  underlined?: boolean;
+  hashtag?: boolean;
+  wikilink?: boolean;
+  datelink?: boolean;
 };
 
 export type ContentAttributes = {
@@ -20,7 +22,7 @@ export type ContentAttributes = {
 };
 
 export type ToggledStyle = {
-  [K in keyof Styles]-?: Required<Styles>[K] extends true ? K : never;
+  [K in keyof Styles]-?: Required<Styles>[K] extends boolean ? K : never;
 }[keyof Styles];
 
 export type ColorStyle = {

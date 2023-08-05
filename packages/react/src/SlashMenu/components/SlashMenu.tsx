@@ -22,18 +22,14 @@ export function SlashMenu<BSchema extends BlockSchema>(
   const groups = _.groupBy(props.items, (i) => i.group);
 
   _.forEach(groups, (el) => {
-    renderedItems.push(
-      <Menu.Label key={el[0].group}>{el[0].group}</Menu.Label>
-    );
-
     for (const item of el) {
       renderedItems.push(
         <SlashMenuItem
           key={item.name}
           name={item.name}
-          icon={item.icon}
+          icon={item?.icon}
           hint={item.hint}
-          shortcut={item.shortcut}
+          shortcut={item?.markdownHint ?? ""}
           isSelected={props.keyboardHoveredItemIndex === index}
           set={() => props.itemCallback(item)}
         />
@@ -51,6 +47,7 @@ export function SlashMenu<BSchema extends BlockSchema>(
        * close due to trigger="hover".
        */
       defaultOpened={true}
+      unstyled
       trigger={"hover"}
       closeDelay={10000000}>
       <Menu.Dropdown className={classes.root}>

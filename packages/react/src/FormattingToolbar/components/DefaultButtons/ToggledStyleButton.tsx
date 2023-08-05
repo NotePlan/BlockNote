@@ -1,18 +1,24 @@
 import { ToolbarButton } from "../../../SharedComponents/Toolbar/components/ToolbarButton";
 import { formatKeyboardShortcut } from "../../../utils";
-import {
-  RiBold,
-  RiCodeFill,
-  RiItalic,
-  RiStrikethrough,
-  RiUnderline,
-  RiHashtag,
-  RiLink,
-} from "react-icons/ri";
 import { BlockNoteEditor, BlockSchema, ToggledStyle } from "@blocknote/core";
 import { IconType } from "react-icons";
+import iconsData from "../FontIcons";
+const {
+  bold,
+  link,
+  italic,
+  underlined,
+  strikethrough,
+  highlighted,
+  code,
+  hashtag,
+  task,
+  checkbox,
+} = iconsData;
 
 const shortcuts: Record<ToggledStyle, string> = {
+  task: "",
+  checkbox: "",
   bold: "Mod+B",
   italic: "Mod+I",
   underlined: "Mod+U",
@@ -27,17 +33,19 @@ const shortcuts: Record<ToggledStyle, string> = {
 };
 
 const icons: Record<ToggledStyle, IconType> = {
-  bold: RiBold,
-  italic: RiItalic,
-  underlined: RiUnderline,
-  strikethrough: RiStrikethrough,
-  highlighted: RiCodeFill,
-  code: RiCodeFill,
-  hashtag: RiHashtag,
-  wikilink: RiLink,
-  datelink: RiLink,
-  inlineFile: RiLink,
-  inlineImage: RiLink,
+  task,
+  checkbox,
+  bold,
+  italic,
+  underlined,
+  strikethrough,
+  highlighted,
+  code,
+  hashtag,
+  wikilink: link,
+  datelink: link,
+  inlineFile: link,
+  inlineImage: link,
 };
 
 export const ToggledStyleButton = <BSchema extends BlockSchema>(props: {

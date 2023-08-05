@@ -6,21 +6,17 @@ import {
 } from "@blocknote/core";
 import { useCallback, useMemo } from "react";
 import { IconType } from "react-icons";
-import {
-  RiAlignCenter,
-  RiAlignJustify,
-  RiAlignLeft,
-  RiAlignRight,
-} from "react-icons/ri";
 import { ToolbarButton } from "../../../SharedComponents/Toolbar/components/ToolbarButton";
+import iconsData from "../FontIcons";
+const { left, center, right, justify } = iconsData;
 
 type TextAlignment = DefaultProps["textAlignment"]["values"][number];
 
 const icons: Record<TextAlignment, IconType> = {
-  left: RiAlignLeft,
-  center: RiAlignCenter,
-  right: RiAlignRight,
-  justify: RiAlignJustify,
+  left,
+  center,
+  right,
+  justify,
 };
 
 export const TextAlignButton = <BSchema extends BlockSchema>(props: {
