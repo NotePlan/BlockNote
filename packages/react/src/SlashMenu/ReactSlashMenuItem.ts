@@ -14,7 +14,8 @@ export class ReactSlashMenuItem<
     public readonly group: string,
     public readonly icon: JSX.Element,
     public readonly hint?: string,
-    public readonly shortcut?: string
+    public readonly shortcut?: string,
+    public readonly markdownHint?: string
   ) {
     super(name, execute, aliases);
   }

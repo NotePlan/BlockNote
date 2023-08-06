@@ -78,6 +78,17 @@ export const getBlockNoteTheme = (
     ? blockNoteColorScheme[5]
     : blockNoteColorScheme[3];
 
+    //TODO: Implement NotePlan themes for the approach used above for BlockNote
+  const slashMenuitemColor = "#EADACE";
+  const backgroundSlashMenuColor = "#F2F4F5";
+  const slashMenuIconColor = "#A4A5A7";
+  const slashMenuItemTextColor = "#363638";
+  const slashMenuLabelTextColor = "#858689";
+  const slashMenuBorderColor = "#D8D9DC";
+  const toolbarBackground = "rgb(254 215 170)";
+  const toolbarColor = "rgb(55, 65, 81)";
+
+
   return {
     activeStyles: {
       // Removes button press effect.
@@ -127,19 +138,20 @@ export const getBlockNoteTheme = (
       Menu: {
         styles: () => ({
           dropdown: {
-            backgroundColor: primaryBackground,
+            font: "var(--fa-font-solid)",
+            backgroundColor: backgroundSlashMenuColor,
             border: border,
             borderRadius: "6px",
             boxShadow: boxShadow,
             color: primaryText,
             padding: "2px",
             ".mantine-Menu-item": {
-              backgroundColor: primaryBackground,
+              backgroundColor: slashMenuitemColor,
               border: "none",
               color: primaryText,
             },
             ".mantine-Menu-item[data-hovered]": {
-              backgroundColor: hoveredBackground,
+              backgroundColor: slashMenuitemColor,
               border: "none",
               color: hoveredText,
             },
@@ -205,26 +217,25 @@ export const getBlockNoteTheme = (
             borderRadius: "6px",
             flexWrap: "nowrap",
             gap: "2px",
-            padding: "2px",
+            padding: "5px 8px 6px 8px",
             width: "fit-content",
             // Button (including dropdown target)
             ".mantine-UnstyledButton-root": {
               backgroundColor: primaryBackground,
               border: "none",
               borderRadius: "4px",
-              color: primaryText,
+              color: toolbarColor,
+              fontWeight: 600,
             },
             // Hovered button
             ".mantine-UnstyledButton-root:hover": {
-              backgroundColor: hoveredBackground,
+              backgroundColor: toolbarBackground,
               border: "none",
-              color: hoveredText,
             },
             // Selected button
             ".mantine-UnstyledButton-root[data-selected]": {
-              backgroundColor: selectedBackground,
+              backgroundColor: toolbarBackground,
               border: "none",
-              color: selectedText,
             },
             // Disabled button
             ".mantine-UnstyledButton-root[data-disabled]": {
@@ -252,15 +263,15 @@ export const getBlockNoteTheme = (
       Tooltip: {
         styles: () => ({
           root: {
-            backgroundColor: primaryBackground,
+            backgroundColor: "black",
             border: border,
             borderRadius: "6px",
             boxShadow: boxShadow,
-            color: primaryText,
+            color: "white",
             padding: "4px 10px",
             textAlign: "center",
             "div ~ div": {
-              color: secondaryText,
+              color: "white",
             },
           },
         }),
@@ -269,26 +280,58 @@ export const getBlockNoteTheme = (
         styles: () => ({
           root: {
             position: "relative",
+            background: backgroundSlashMenuColor,
+            padding: "14px 0",
+            border: `1px solid ${slashMenuBorderColor}`,
+            outline: "none",
+            maxHeight: 360,
+            minWidth: 450,
+            width: 450,
+            overflow: "hidden",
             ".mantine-Menu-item": {
               // Icon
+              height: 26,
+              padding: 0,
+              width: "100%",
+              display: "flex",
+              color: slashMenuItemTextColor,
+              backgroundColor: "transparent",
+              alignItems: "flex-end",
+              cursor: "pointer",
+              fontWeight: 400,
+              paddingBottom: 2,
+              fontSize: 13,
+              ":hover,:active": {
+                backgroundColor: slashMenuitemColor,
+              },
               ".mantine-Menu-itemIcon": {
-                backgroundColor: secondaryBackground,
+                backgroundColor: "transparent",
                 borderRadius: "4px",
-                color: primaryText,
-                padding: "8px",
+                color: slashMenuIconColor,
+                width: 47,
+                boxSizing: "content-box",
+                fontSize: 15,
+                marginRight: 6,
+                marginBottom: 1,
               },
               // Text
               ".mantine-Menu-itemLabel": {
-                paddingRight: "16px",
                 ".mantine-Stack-root": {
                   gap: "0",
                 },
               },
-              // Badge (keyboard shortcut)
+              // Badge (markdown hint)
               ".mantine-Menu-itemRightSection": {
+                marginLeft: "auto",
+                textTransform: "lowercase",
                 ".mantine-Badge-root": {
-                  backgroundColor: secondaryBackground,
-                  color: primaryText,
+                  backgroundColor: "transparent",
+                  color: slashMenuLabelTextColor,
+                  fontSize: 10,
+                  fontWeight: 400,
+                  textTransform: "none",
+                  marginBottom: 3,
+                  marginRight: 19,
                 },
               },
             },

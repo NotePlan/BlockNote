@@ -26,6 +26,46 @@ function insertOrUpdateBlock<BSchema extends DefaultBlockSchema>(
  * An array containing commands for creating all default blocks.
  */
 export const defaultSlashMenuItems = [
+  // Command for creating a task item
+  new BaseSlashMenuItem<DefaultBlockSchema>(
+    "Task",
+    (editor) =>
+      insertOrUpdateBlock(editor, {
+        type: "taskListItem",
+      }),
+    ["task", "taskList", "task list"]
+  ),
+
+  // Command for creating a task item
+  new BaseSlashMenuItem<DefaultBlockSchema>(
+    "Checklist",
+    (editor) =>
+      insertOrUpdateBlock(editor, {
+        type: "checkListItem",
+      }),
+    ["check", "checkbox", "checkList", "check list"]
+  ),
+
+  // Command for creating a bullet list
+  new BaseSlashMenuItem<DefaultBlockSchema>(
+    "Bullet Point",
+    (editor) =>
+      insertOrUpdateBlock(editor, {
+        type: "bulletListItem",
+      }),
+    ["ul", "list", "bulletPoint", "bullet point"]
+  ),
+
+  // Command for creating an ordered list
+  new BaseSlashMenuItem<DefaultBlockSchema>(
+    "Numbered List",
+    (editor) =>
+      insertOrUpdateBlock(editor, {
+        type: "numberedListItem",
+      }),
+    ["li", "numberedlist", "numbered list"]
+  ),
+
   // Command for creating a level 1 heading
   new BaseSlashMenuItem<DefaultBlockSchema>(
     "Heading",
@@ -59,35 +99,15 @@ export const defaultSlashMenuItems = [
     ["h3", "heading3", "subheading"]
   ),
 
-  // Command for creating an ordered list
-  new BaseSlashMenuItem<DefaultBlockSchema>(
-    "Numbered List",
-    (editor) =>
-      insertOrUpdateBlock(editor, {
-        type: "numberedListItem",
-      }),
-    ["li", "list", "numberedlist", "numbered list"]
-  ),
-
-  // Command for creating a bullet list
-  new BaseSlashMenuItem<DefaultBlockSchema>(
-    "Bullet List",
-    (editor) =>
-      insertOrUpdateBlock(editor, {
-        type: "bulletListItem",
-      }),
-    ["ul", "list", "bulletlist", "bullet list"]
-  ),
-
   // Command for creating a paragraph (pretty useless)
-  new BaseSlashMenuItem<DefaultBlockSchema>(
-    "Paragraph",
-    (editor) =>
-      insertOrUpdateBlock(editor, {
-        type: "paragraph",
-      }),
-    ["p"]
-  ),
+  // new BaseSlashMenuItem<DefaultBlockSchema>(
+  //   "Paragraph",
+  //   (editor) =>
+  //     insertOrUpdateBlock(editor, {
+  //       type: "paragraph",
+  //     }),
+  //   ["p"]
+  // ),
 
   //     replaceRangeWithNode(editor, range, node);
 
